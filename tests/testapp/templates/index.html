@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+{% load esm %}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Test App</title>
+  <script type="importmap">{% importmap %}</script>
+</head>
+<body>
+<script type="module">
+  import "htmx.org"
+  htmx.logAll()
+</script>
+<code>
+  <pre>{% importmap %}</pre>
+</code>
+</body>
+</html>

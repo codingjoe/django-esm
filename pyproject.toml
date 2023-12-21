@@ -1,0 +1,89 @@
+[build-system]
+requires = ["flit_core>=3.2", "flit_scm", "wheel"]
+build-backend = "flit_scm:buildapi"
+
+[project]
+name = "django-esm"
+authors = [
+  { name = "Johannes Maron", email = "johannes@maron.family" },
+]
+readme = "README.md"
+license = { file = "LICENSE" }
+keywords = ["ESM", "JavaScript", "importmap", "Django", "module"]
+dynamic = ["version", "description"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Programming Language :: Python",
+  "Environment :: Web Environment",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: BSD License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Topic :: Software Development",
+  "Programming Language :: JavaScript",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Framework :: Django",
+  "Framework :: Django :: 3.2",
+  "Framework :: Django :: 4.2",
+  "Framework :: Django :: 5.0",
+]
+requires-python = ">=3.8"
+dependencies = ["django>=3.2.0"]
+
+[project.optional-dependencies]
+test = [
+  "pytest",
+  "pytest-cov",
+  "pytest-django",
+  "pytest-playwright",
+]
+lint = [
+  "bandit==1.7.6",
+  "black==23.12.0",
+  "flake8==6.1.0",
+  "isort==5.13.2",
+  "pydocstyle[toml]==6.3.0",
+]
+
+[project.urls]
+Project-URL = "https://github.com/codingjoe/django-esm"
+Changelog = "https://github.com/codingjoe/django-esm/releases"
+Source = "https://github.com/codingjoe/django-esm"
+Documentation = "https://github.com/codingjoe/django-esm#django-esm"
+Issue-Tracker = "https://github.com/codingjoe/django-esm/issues"
+
+[tool.flit.module]
+name = "django_esm"
+
+[tool.setuptools_scm]
+write_to = "django_esm/_version.py"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--cov --tb=short -rxs"
+testpaths = ["tests"]
+DJANGO_SETTINGS_MODULE = "tests.testapp.settings"
+
+[tool.coverage.run]
+source = ["django_esm"]
+
+[tool.coverage.report]
+show_missing = true
+omit = ["django_esm/_version.py"]
+
+[tool.isort]
+atomic = true
+line_length = 88
+known_first_party = "django_esm, tests"
+include_trailing_comma = true
+default_section = "THIRDPARTY"
+combine_as_imports = true
+
+[tool.pydocstyle]
+add_ignore = "D1"
