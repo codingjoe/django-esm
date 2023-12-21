@@ -3,6 +3,10 @@ from pathlib import Path
 
 from django.contrib.staticfiles.storage import staticfiles_storage
 
+# There is a long history how ESM is supported in Node.js
+# So we implement some fallbacks, see also: https://nodejs.org/api/packages.html#exports
+ESM_KEYS = ["exports", "module", "main"]
+
 
 def parse_package_json(path: Path = None, node_modules: Path = None):
     """Parse a project main package.json and return a dict of importmap entries."""
@@ -12,10 +16,17 @@ def parse_package_json(path: Path = None, node_modules: Path = None):
         package_json = json.load(f)
     name = package_json["name"]
     dependencies = package_json.get("dependencies", {})
-    main = package_json.get("main", None)
-    if main:
-        yield name, staticfiles_storage.url(
-            str((path / main).relative_to(node_modules))
-        )
+    for key in ESM_KEYS:
+        export = package_json.get(key, None)
+        if export:
+            try:
+                for module_name, module in export.items():
+                    yield str(Path(name) / module_name), staticfiles_storage.url(
+                        str((path / module["default"]).relative_to(node_modules))
+                    )
+            except AttributeError:
+                yield name, staticfiles_storage.url(
+                    str((path / export).relative_to(node_modules))
+                )
     for dep_name, dep_version in dependencies.items():
         yield from parse_package_json(node_modules / dep_name, node_modules)

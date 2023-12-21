@@ -30,7 +30,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-Next, add the node_modules directory to your staticfiles finders:
+Next, add the `node_modules` directory to your staticfiles directories:
 
 ```python
 # settings.py
@@ -61,11 +61,26 @@ You can now import JavaScript modules in your Django templates:
 
 ```html
 <!-- index.html -->
-
 {% block content %}
   <script type="module">
     import "htmx.org"
     htmx.logAll()
   </script>
 {% endblock %}
+```
+
+## How it works
+
+Django ESM works via native JavaScript module support in modern browsers.
+It uses the [import map](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap)
+to map module names to their location on the server.
+
+Here is an example import map:
+
+```json
+{
+  "imports": {
+    "htmx.org": "/static/htmx.org/dist/htmx.min.js"
+  }
+}
 ```
