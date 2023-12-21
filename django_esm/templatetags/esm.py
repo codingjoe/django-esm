@@ -13,6 +13,8 @@ register = template.Library()
 def importmap():
     return mark_safe(  # nosec
         json.dumps(
-            {"imports": dict(utils.parse_package_json(settings.BASE_DIR))}, indent=2
+            {"imports": dict(utils.parse_package_json(settings.BASE_DIR))},
+            indent=2 if settings.DEBUG else None,
+            separators=None if settings.DEBUG else (",", ":"),
         )
     )
