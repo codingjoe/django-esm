@@ -1,5 +1,12 @@
 {
   "name": "django-esm",
+  "exports": {
+    ".": "./js/index.js",
+    "./components":{
+      "import": "./js/components/index.js",
+      "default": "./js/components/index.js"
+    }
+  },
   "dependencies": {
     "htmx.org": "^1.9.9",
     "lit": "^3.1.0"

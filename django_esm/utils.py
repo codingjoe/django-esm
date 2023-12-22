@@ -16,17 +16,26 @@ def parse_package_json(path: Path = None, node_modules: Path = None):
         package_json = json.load(f)
     name = package_json["name"]
     dependencies = package_json.get("dependencies", {})
+    if path.is_relative_to(node_modules):
+        base_path = node_modules
+    else:
+        base_path = path
     for key in ESM_KEYS:
         export = package_json.get(key, None)
         if export:
             try:
                 for module_name, module in export.items():
-                    yield str(Path(name) / module_name), staticfiles_storage.url(
-                        str((path / module["default"]).relative_to(node_modules))
-                    )
+                    try:
+                        yield str(Path(name) / module_name), staticfiles_storage.url(
+                            str((path / module["default"]).relative_to(base_path))
+                        )
+                    except TypeError:
+                        yield str(Path(name) / module_name), staticfiles_storage.url(
+                            str((path / module).relative_to(base_path))
+                        )
             except AttributeError:
                 yield name, staticfiles_storage.url(
-                    str((path / export).relative_to(node_modules))
+                    str((path / export).relative_to(base_path))
                 )
     for dep_name, dep_version in dependencies.items():
         yield from parse_package_json(node_modules / dep_name, node_modules)
