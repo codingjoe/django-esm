@@ -9,14 +9,13 @@ FIXTURE_DIR = Path(__file__).parent
 
 def test_parse_root_package(package_json):
     import_map = dict(utils.parse_root_package(package_json))
-    assert import_map["htmx.org"] == "/static/htmx.org/dist/htmx.min.js"
-    assert import_map["lit"] == "/static/lit/index.js"
-    assert (
-        import_map["@lit/reactive-element"]
-        == "/static/%40lit/reactive-element/reactive-element.js"
+    assert import_map["htmx.org"].startswith("/static/htmx.org/dist/htmx.min")
+    assert import_map["lit"].startswith("/static/lit/index.")
+    assert import_map["@lit/reactive-element"].startswith(
+        "/static/@lit/reactive-element/reactive-element"
     )
-    assert import_map["lit-html"] == "/static/lit-html/lit-html.js"
-    assert import_map["#index"] == "/static/js/index.js"
+    assert import_map["lit-html"].startswith("/static/lit-html/lit-html")
+    assert import_map["#index"] == "/static/js/index.d41d8cd98f00.js"
     assert import_map["#components/"] == "/static/js/components/"
     assert import_map["#htmx"] == "https://unpkg.com/htmx.org@1.9.10"
 

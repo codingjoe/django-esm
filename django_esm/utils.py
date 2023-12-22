@@ -24,10 +24,10 @@ def parse_root_package(package_json):
         url = mod
         if mod[0] in [".", "/"]:
             # local file
-            url = get_static_from_abs_path(settings.BASE_DIR / mod)
             if mod.endswith("/*"):
-                url = url[:-2] + "/"
+                mod = mod[:-1]
                 module_name = module_name[:-1]
+            url = get_static_from_abs_path(settings.BASE_DIR / mod)
         yield module_name, url
 
     for dep_name, dep_version in package_json.get("dependencies", {}).items():
@@ -38,10 +38,12 @@ def get_static_from_abs_path(path: Path):
     for finder in get_finders():
         for storage in finder.storages.values():
             try:
-                rel_path = path.relative_to(Path(storage.location))
+                rel_path = path.relative_to(Path(storage.location).resolve())
             except ValueError:
                 pass
             else:
+                if path.is_dir():
+                    return settings.STATIC_URL + str(rel_path) + "/"
                 return staticfiles_storage.url(str(rel_path))
     raise ValueError(f"Could not find {path} in staticfiles")
 
@@ -84,7 +86,7 @@ def parse_package_json(path: Path = None):
             mod = module
 
         yield str(Path(name) / module_name), staticfiles_storage.url(
-            str((path / mod).relative_to(settings.BASE_DIR / "node_modules"))
+            str((path / mod).resolve().relative_to(settings.BASE_DIR / "node_modules"))
         )
 
     if (path / "node_modules").exists():
