@@ -1,3 +1,4 @@
+import functools
 import json
 
 from django import template
@@ -10,6 +11,7 @@ register = template.Library()
 
 
 @register.simple_tag
+@functools.lru_cache
 def importmap():
     return mark_safe(  # nosec
         json.dumps(
