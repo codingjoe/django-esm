@@ -1,3 +1,4 @@
+import json
 import subprocess
 from pathlib import Path
 
@@ -8,8 +9,9 @@ TEST_DIR = Path(__file__).parent
 
 @pytest.fixture(scope="session")
 def package_json():
-    subprocess.check_call(["npm", "install"], cwd=TEST_DIR)
-    return TEST_DIR / "package.json"
+    subprocess.check_call(["npm", "install", "--omit=dev"], cwd=TEST_DIR)
+    with (TEST_DIR / "package.json").open() as f:
+        return json.load(f)
 
 
 @pytest.fixture(scope="session")

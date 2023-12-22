@@ -69,6 +69,49 @@ You can now import JavaScript modules in your Django templates:
 {% endblock %}
 ```
 
+### Private modules
+
+You can also import private modules from your Django app:
+
+```html
+<!-- index.html -->
+{% block content %}
+  <script type="module">
+    import "#myapp/js/my-module.js"
+  </script>
+{% endblock %}
+```
+
+To import a private module, prefix the module name with `#`.
+You need to define your private modules in your `package.json` file:
+
+```json
+{
+  "imports": {
+    "#myapp/script": "./myapp/static/js/script.js",
+    // You may use trailing stars to import all files in a directory.
+    "#myapp/*": "./myapp/static/js/*"
+  }
+}
+```
+
+### Testing (with Jest)
+
+You can use the `django_esm` package to test your JavaScript modules with Jest.
+Jest v27.4 and upwards will honor `imports` in your `package.json` file.
+
+Before v27.4 that, you can try to use a custom `moduleNameMapper`, like so:
+
+```js
+// jest.config.js
+module.exports = {
+  // …
+  moduleNameMapper: {
+    '^#(.*)$': '<rootDir>/staticfiles/js/$1' // @todo: remove this with Jest >=29.4
+  },
+}
+```
+
 ## How it works
 
 Django ESM works via native JavaScript module support in modern browsers.

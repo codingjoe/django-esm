@@ -1,11 +1,12 @@
 {
   "name": "django-esm",
-  "exports": {
-    ".": "./js/index.js",
-    "./components":{
-      "import": "./js/components/index.js",
-      "default": "./js/components/index.js"
-    }
+  "imports": {
+    "#index": {
+      "import": "./testapp/static/js/index.js",
+      "default": "./testapp/static/js/index.js"
+    },
+    "#components/*": "./testapp/static/js/components/*",
+    "#htmx": "https://unpkg.com/htmx.org@1.9.10"
   },
   "dependencies": {
     "htmx.org": "^1.9.9",
