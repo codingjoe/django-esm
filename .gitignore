@@ -165,3 +165,7 @@ _version.py
 # npm
 node_modules/
 package-lock.json
+
+
+# Django
+tests/staticfiles/
