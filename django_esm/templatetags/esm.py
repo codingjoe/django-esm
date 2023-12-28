@@ -11,8 +11,19 @@ register = template.Library()
 
 
 @register.simple_tag
-@functools.lru_cache
 def importmap():
+    fn = _importmap if settings.DEBUG else _cached_importmap
+    return fn()
+
+
+functools.lru_cache()
+
+
+def _cached_importmap():
+    return _importmap()
+
+
+def _importmap():
     with (settings.BASE_DIR / "package.json").open() as f:
         package_json = json.load(f)
     return mark_safe(  # nosec

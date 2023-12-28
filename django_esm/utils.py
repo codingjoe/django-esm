@@ -1,4 +1,6 @@
+import itertools
 import json
+import re
 from pathlib import Path
 
 from django.conf import settings
@@ -24,17 +26,15 @@ def parse_root_package(package_json):
         url = mod
         if mod[0] in [".", "/"]:
             # local file
-            if mod.endswith("/*"):
-                mod = mod[:-1]
-                module_name = module_name[:-1]
-            url = get_static_from_abs_path(settings.BASE_DIR / mod)
-        yield module_name, url
+            yield from get_static_from_abs_path(module_name, settings.BASE_DIR / mod)
+        else:
+            yield module_name, url
 
     for dep_name, dep_version in package_json.get("dependencies", {}).items():
         yield from parse_package_json(settings.BASE_DIR / "node_modules" / dep_name)
 
 
-def get_static_from_abs_path(path: Path):
+def get_static_from_abs_path(mod: str, path: Path):
     for finder in get_finders():
         for storage in finder.storages.values():
             try:
@@ -42,10 +42,16 @@ def get_static_from_abs_path(path: Path):
             except ValueError:
                 pass
             else:
-                if path.is_dir():
-                    return settings.STATIC_URL + str(rel_path) + "/"
-                return staticfiles_storage.url(str(rel_path))
-    raise ValueError(f"Could not find {path} in staticfiles")
+                if "*" in mod:
+                    for match in Path(storage.location).rglob(
+                        str(rel_path).replace("*", "**/*")
+                    ):
+                        sp = str(match.relative_to(Path(storage.location).resolve()))
+                        pattern = re.escape(str(rel_path)).replace(r"\*", r"(.*)")
+                        bit = re.match(pattern, sp).group(1)
+                        yield mod.replace("*", bit), staticfiles_storage.url(sp)
+                else:
+                    yield mod, staticfiles_storage.url(str(rel_path))
 
 
 # There is a long history how ESM is supported in Node.js
@@ -71,6 +77,18 @@ def cast_exports(package_json):
     return exports
 
 
+def find_default_key(module):
+    try:
+        yield module["default"]
+    except TypeError:
+        if isinstance(module, list):
+            yield from itertools.chain(*(find_default_key(i) for i in module))
+        else:
+            yield module
+    except KeyError:
+        yield from find_default_key(module["import"])
+
+
 def parse_package_json(path: Path = None):
     """Parse a project main package.json and return a dict of importmap entries."""
     with (path / "package.json").open() as f:
@@ -80,18 +98,19 @@ def parse_package_json(path: Path = None):
     exports = cast_exports(package_json)
 
     for module_name, module in exports.items():
-        try:
-            mod = module["default"]
-        except TypeError:
-            mod = module
+        module = next(find_default_key(module))
 
         yield str(Path(name) / module_name), staticfiles_storage.url(
-            str((path / mod).resolve().relative_to(settings.BASE_DIR / "node_modules"))
+            str(
+                (path / module)
+                .resolve()
+                .relative_to(settings.BASE_DIR / "node_modules")
+            )
         )
 
-    if (path / "node_modules").exists():
-        node_modules = path / "node_modules"
-    else:
-        node_modules = path / "/".join(".." for _ in Path(name).parts)
     for dep_name, dep_version in dependencies.items():
-        yield from parse_package_json(node_modules / dep_name)
+        dep_path = path
+        while not (dep_path / "node_modules" / dep_name).exists():
+            dep_path /= ".."
+
+        yield from parse_package_json((dep_path / "node_modules" / dep_name).resolve())
