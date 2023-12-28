@@ -17,7 +17,7 @@ def test_parse_root_package(package_json):
     )
     assert import_map["lit-html"] == "/static/lit-html/lit-html.js"
     assert import_map["#index"] == "/static/js/index.js"
-    assert import_map["#components/"] == "/static/js/components/"
+    assert import_map["#components/index.js"] == "/static/js/components/index.js"
     assert import_map["#htmx"] == "https://unpkg.com/htmx.org@1.9.10"
 
 
@@ -47,6 +47,4 @@ def test_cast_exports():
 
 
 def test_get_static_from_abs_path():
-    with pytest.raises(ValueError) as e:
-        utils.get_static_from_abs_path(Path("/foo/bar"))
-    assert "Could not find" in str(e.value)
+    assert not list(utils.get_static_from_abs_path("#some-module", Path("/foo/bar")))
