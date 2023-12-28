@@ -1,3 +1,4 @@
+import itertools
 import json
 from pathlib import Path
 
@@ -71,6 +72,18 @@ def cast_exports(package_json):
     return exports
 
 
+def find_default_key(module):
+    try:
+        yield module["default"]
+    except TypeError:
+        if isinstance(module, list):
+            yield from itertools.chain(*(find_default_key(i) for i in module))
+        else:
+            yield module
+    except KeyError:
+        yield from find_default_key(module["import"])
+
+
 def parse_package_json(path: Path = None):
     """Parse a project main package.json and return a dict of importmap entries."""
     with (path / "package.json").open() as f:
@@ -80,18 +93,19 @@ def parse_package_json(path: Path = None):
     exports = cast_exports(package_json)
 
     for module_name, module in exports.items():
-        try:
-            mod = module["default"]
-        except TypeError:
-            mod = module
+        module = next(find_default_key(module))
 
         yield str(Path(name) / module_name), staticfiles_storage.url(
-            str((path / mod).resolve().relative_to(settings.BASE_DIR / "node_modules"))
+            str(
+                (path / module)
+                .resolve()
+                .relative_to(settings.BASE_DIR / "node_modules")
+            )
         )
 
-    if (path / "node_modules").exists():
-        node_modules = path / "node_modules"
-    else:
-        node_modules = path / "/".join(".." for _ in Path(name).parts)
     for dep_name, dep_version in dependencies.items():
-        yield from parse_package_json(node_modules / dep_name)
+        dep_path = path
+        while not (dep_path / "node_modules" / dep_name).exists():
+            dep_path /= ".."
+
+        yield from parse_package_json((dep_path / "node_modules" / dep_name).resolve())
