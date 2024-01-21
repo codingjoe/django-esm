@@ -100,12 +100,8 @@ def parse_package_json(path: Path = None):
     for module_name, module in exports.items():
         module = next(find_default_key(module))
 
-        yield str(Path(name) / module_name), staticfiles_storage.url(
-            str(
-                (path / module)
-                .resolve()
-                .relative_to(settings.BASE_DIR / "node_modules")
-            )
+        yield from get_static_from_abs_path(
+            str(Path(name) / module_name), path / module
         )
 
     for dep_name, dep_version in dependencies.items():
