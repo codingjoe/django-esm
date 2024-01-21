@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pytest
+from django.conf import settings
 
 from django_esm import utils
 
@@ -9,16 +10,20 @@ FIXTURE_DIR = Path(__file__).parent
 
 def test_parse_root_package(package_json):
     import_map = dict(utils.parse_root_package(package_json))
-    assert import_map["htmx.org"] == "/static/htmx.org/dist/htmx.min.js"
-    assert import_map["lit"] == "/static/lit/index.js"
+    assert import_map["#index"] == "testapp/static/js/index.js"
+    assert import_map["#components/index.js"] == "testapp/static/js/components/index.js"
+    assert import_map["#htmx"] == "https://unpkg.com/htmx.org@1.9.10"
+
+
+def test_parse_dependencies(package_json):
+    import_map = dict(utils.parse_dependencies(package_json))
+    assert import_map["lit-html"] == "lit-html/lit-html.js"
+    assert import_map["htmx.org"] == "htmx.org/dist/htmx.min.js"
+    assert import_map["lit"] == "lit/index.js"
     assert (
         import_map["@lit/reactive-element"]
-        == "/static/%40lit/reactive-element/reactive-element.js"
+        == "@lit/reactive-element/reactive-element.js"
     )
-    assert import_map["lit-html"] == "/static/lit-html/lit-html.js"
-    assert import_map["#index"] == "/static/js/index.js"
-    assert import_map["#components/index.js"] == "/static/js/components/index.js"
-    assert import_map["#htmx"] == "https://unpkg.com/htmx.org@1.9.10"
 
 
 def test_parse_root_package__bad_imports(package_json):
@@ -47,4 +52,8 @@ def test_cast_exports():
 
 
 def test_get_static_from_abs_path():
-    assert not list(utils.get_static_from_abs_path("#some-module", Path("/foo/bar")))
+    assert not list(
+        utils.get_static_from_abs_path(
+            "#some-module", Path("/foo/bar"), settings.BASE_DIR
+        )
+    )
