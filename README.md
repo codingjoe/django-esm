@@ -30,12 +30,16 @@ INSTALLED_APPS = [
 ]
 ```
 
-Next, add the `node_modules` directory to your staticfiles directories:
+Next, add a new staticfiles finder to your `STATICFILES_FINDERS` setting:
 
 ```python
 # settings.py
-STATICFILES_DIRS = [
-    BASE_DIR / "node_modules",
+STATICFILES_FINDERS = [
+    # Django's default finders
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    # django-esm finder
+    "django_esm.finders.ESMFinder",
 ]
 ```
 
