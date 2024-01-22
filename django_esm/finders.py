@@ -42,14 +42,9 @@ class ESMFinder(BaseFinder):
     def _list(*ignore_patterns):
         with (settings.BASE_DIR / "package.json").open() as f:
             package_json = json.load(f)
-
         return [
             (path, storages.root_storage)
             for mod, path in utils.parse_root_package(package_json)
-            if not matches_patterns(path, ignore_patterns)
-        ] + [
-            (path, storages.node_modules_storage)
-            for mod, path in utils.parse_dependencies(package_json)
             if not matches_patterns(path, ignore_patterns)
         ]
 
