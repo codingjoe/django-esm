@@ -45,7 +45,9 @@ def get_static_from_abs_path(mod: str, path: Path, location: Path):
         pass
     else:
         if "*" in mod:
-            for match in location.rglob(str(rel_path).replace("*", "**/*")):
+            for match in location.glob(str(rel_path).replace("*", "**/*")):
+                if match.is_dir():
+                    continue
                 sp = str(match.relative_to(location.resolve()))
                 pattern = re.escape(str(rel_path)).replace(r"\*", r"(.*)")
                 bit = re.match(pattern, sp).group(1)
