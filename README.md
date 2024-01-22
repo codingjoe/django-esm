@@ -43,6 +43,23 @@ STATICFILES_FINDERS = [
 ]
 ```
 
+You will also need to expose your `node_modules` directory to Django's
+staticfiles finder. You may run `npm ci --omit=dev` prior to running
+`collectstatic` to avoid exposing your `devDependencies` publicly.
+
+```python
+# settings.py
+from pathlib import Path
+
+# add BASE_DIR (if not already present)
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+STATICFILES_DIRS = [
+    # …
+    BASE_DIR / "node_modules",
+]
+```
+
 Finally, add the import map to your base template:
 
 ```html

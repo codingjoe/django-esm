@@ -17,9 +17,7 @@ class TestESMFinder:
             self.finder.find("testapp/static/js/components/index.js")
             == "testapp/static/js/components/index.js"
         )
-        assert self.finder.find("lit-html/lit-html.js", all=True) == [
-            "lit-html/lit-html.js"
-        ]
+        assert self.finder.find("lit-html/lit-html.js", all=True) == []
         assert self.finder.find("foo/bar.js") == []
 
     def test_list(self):
@@ -29,8 +27,6 @@ class TestESMFinder:
             "testapp/static/js/components/index.js",
             storages.root_storage,
         ) in all_files
-        assert ("lit-html/lit-html.js", storages.node_modules_storage) in all_files
-        assert ("htmx.org/dist/htmx.min.js", storages.node_modules_storage) in all_files
 
     def test_check(self, settings):
         assert not self.finder.check()
