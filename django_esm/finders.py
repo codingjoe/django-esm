@@ -35,18 +35,17 @@ class ESMFinder(BaseFinder):
         return []  # this method has a strange return type
 
     def list(self, ignore_patterns):
-        return self._list(*ignore_patterns)
-
-    @staticmethod
-    @functools.lru_cache()
-    def _list(*ignore_patterns):
         with (settings.BASE_DIR / "package.json").open() as f:
             package_json = json.load(f)
-        return [
-            (path, storages.root_storage)
-            for mod, path in utils.parse_root_package(package_json)
-            if not matches_patterns(path, ignore_patterns)
-        ]
+        for mod, path in utils.parse_root_package(package_json):
+            if not matches_patterns(path, ignore_patterns):
+                yield path, storages.root_storage
+                map_path = settings.BASE_DIR / path
+                map_path = map_path.with_suffix(map_path.suffix + ".map")
+                if map_path.exists():
+                    yield str(
+                        map_path.relative_to(settings.BASE_DIR)
+                    ), storages.root_storage
 
     @functools.cached_property
     def all(self):
