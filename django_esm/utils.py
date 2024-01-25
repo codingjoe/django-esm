@@ -102,7 +102,7 @@ def parse_package_json(path: Path = None):
     try:
         module = exports["default"]
         yield from get_static_from_abs_path(
-            str(Path(name) / module),
+            name,
             path / module,
             settings.BASE_DIR / "node_modules",
         )

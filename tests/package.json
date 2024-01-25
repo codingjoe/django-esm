@@ -9,7 +9,12 @@
     "#htmx": "https://unpkg.com/htmx.org@1.9.10"
   },
   "dependencies": {
+    "deep": "file:packages/deep",
+    "flat": "file:packages/flat",
+    "flat2": "file:packages/flat2",
     "htmx.org": "^1.9.9",
-    "lit": "^3.1.0"
+    "list": "file:packages/list",
+    "lit": "^3.1.0",
+    "string": "file:packages/string"
   }
 }
