@@ -1,0 +1,7 @@
+{
+  "name": "flat2",
+  "exports": {
+    "node": "./index.js",
+    "import": "./index.js"
+  }
+}

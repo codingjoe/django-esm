@@ -24,6 +24,12 @@ def test_parse_dependencies(package_json):
         import_map["@lit/reactive-element"]
         == "@lit/reactive-element/reactive-element.js"
     )
+    assert import_map["string"] == "string/index.js"
+    assert import_map["list/index.js"] == "list/index.js"
+    assert import_map["flat"] == "flat/index.js"
+    assert import_map["flat2"] == "flat2/index.js"
+    assert import_map["deep"] == "deep/index.js"
+    assert import_map["deep/features/a.js"] == "deep/features/a.js"
 
 
 def test_parse_root_package__bad_imports(package_json):

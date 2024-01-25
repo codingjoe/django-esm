@@ -1,0 +1,10 @@
+{
+  "name": "deep",
+  "exports": {
+    ".": {
+      "import": "./index.js"
+    },
+    "./*": "./*",
+    "./utils": ["./utils/a.js"]
+  }
+}

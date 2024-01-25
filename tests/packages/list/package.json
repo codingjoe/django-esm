@@ -1,0 +1,4 @@
+{
+  "name": "list",
+  "exports": ["./index.js"]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "flat",
+  "exports": {
+    "default": "./index.js"
+  }
+}
