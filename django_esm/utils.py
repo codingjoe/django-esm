@@ -106,8 +106,6 @@ def parse_package_json(path: Path = None):
             path / module,
             settings.BASE_DIR / "node_modules",
         )
-        if name == "lit-html":
-            print("lit-html", module)
     except KeyError:
         try:
             module = exports["import"]
@@ -116,12 +114,8 @@ def parse_package_json(path: Path = None):
                 path / module,
                 settings.BASE_DIR / "node_modules",
             )
-            if name == "lit-html":
-                print("lit-html", module)
         except KeyError:
             for module_name, module in exports.items():
-                if name == "lit-html":
-                    print("lit-html", module)
                 module = next(find_default_key(module))
 
                 yield from get_static_from_abs_path(
