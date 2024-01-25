@@ -99,14 +99,36 @@ def parse_package_json(path: Path = None):
     dependencies = package_json.get("dependencies", {})
     exports = cast_exports(package_json)
 
-    for module_name, module in exports.items():
-        module = next(find_default_key(module))
-
+    try:
+        module = exports["default"]
         yield from get_static_from_abs_path(
-            str(Path(name) / module_name),
+            str(Path(name) / module),
             path / module,
             settings.BASE_DIR / "node_modules",
         )
+        if name == "lit-html":
+            print("lit-html", module)
+    except KeyError:
+        try:
+            module = exports["import"]
+            yield from get_static_from_abs_path(
+                name,
+                path / module,
+                settings.BASE_DIR / "node_modules",
+            )
+            if name == "lit-html":
+                print("lit-html", module)
+        except KeyError:
+            for module_name, module in exports.items():
+                if name == "lit-html":
+                    print("lit-html", module)
+                module = next(find_default_key(module))
+
+                yield from get_static_from_abs_path(
+                    str(Path(name) / module_name),
+                    path / module,
+                    settings.BASE_DIR / "node_modules",
+                )
 
     for dep_name, dep_version in dependencies.items():
         dep_path = path
