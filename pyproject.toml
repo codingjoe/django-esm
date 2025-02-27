@@ -83,6 +83,7 @@ known_first_party = "django_esm, tests"
 include_trailing_comma = true
 default_section = "THIRDPARTY"
 combine_as_imports = true
+omit = "django_esm/_version.py"
 
 [tool.pydocstyle]
 add_ignore = "D1"
