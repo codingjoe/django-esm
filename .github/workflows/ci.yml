@@ -16,7 +16,7 @@ jobs:
           - bandit -r . -x ./tests
           - black --check --diff .
           - flake8 .
-          - isort --check-only --diff .
+          - isort --check-only --diff `git ls-files`
           - pydocstyle .
     steps:
       - uses: actions/checkout@v4
