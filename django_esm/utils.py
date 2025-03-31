@@ -96,7 +96,6 @@ def parse_package_json(path: Path = None):
     with (path / "package.json").open() as f:
         package_json = json.load(f)
     name = package_json["name"]
-    dependencies = package_json.get("dependencies", {})
     exports = cast_exports(package_json)
 
     try:
@@ -123,10 +122,3 @@ def parse_package_json(path: Path = None):
                     path / module,
                     settings.BASE_DIR / "node_modules",
                 )
-
-    for dep_name, dep_version in dependencies.items():
-        dep_path = path
-        while not (dep_path / "node_modules" / dep_name).exists():
-            dep_path /= ".."
-
-        yield from parse_package_json((dep_path / "node_modules" / dep_name).resolve())

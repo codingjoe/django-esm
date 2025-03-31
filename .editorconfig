@@ -11,8 +11,9 @@ charset = utf-8
 end_of_line = lf
 max_line_length = 88
 
-[*.{json,yml,yaml,js,jsx,vue,toml}]
+[*.{json,yml,yaml,mjs,js,jsx,vue,toml}]
 indent_size = 2
+ij_javascript_force_semicolon_style = false
 
 [*.{html,htm,svg,xml}]
 indent_size = 2

@@ -17,9 +17,11 @@ def importmap():
     with (settings.BASE_DIR / "package.json").open() as f:
         package_json = json.load(f)
 
-    imports = dict(utils.parse_root_package(package_json)) | dict(
-        utils.parse_dependencies(package_json)
-    )
+    imports = dict(utils.parse_root_package(package_json))
+    imports |= {
+        k: f"esm/{v}"
+        for k, v in utils.parse_dependencies(package_json)
+    }
 
     return mark_safe(  # nosec
         json.dumps(
