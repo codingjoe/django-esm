@@ -1,5 +1,6 @@
 import functools
 import json
+import warnings
 
 from django.conf import settings
 from django.contrib.staticfiles.finders import BaseFinder
@@ -29,9 +30,25 @@ class ESMFinder(BaseFinder):
             ]
         return []
 
-    def find(self, path, all=False):
+    def _check_deprecated_find_param(self, find_all=False, **kwargs):
+        if "all" in kwargs:
+            warnings.warn(
+                "The 'all' argument of the find() method is deprecated in favor of "
+                "the 'find_all' argument.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
+            find_all = kwargs["all"]
+        return find_all
+
+    # RemovedInDjango61Warning: When the deprecation ends, replace with:
+    # def find(self, path, find_all=False):
+    def find(self, path, find_all=False, **kwargs):
+        if kwargs:
+            find_all = self._check_deprecated_find_param(find_all=find_all, **kwargs)
+        
         if path in self.all:
-            return [path] if all else path
+            return [path] if find_all else path
         return []  # this method has a strange return type
 
     def list(self, ignore_patterns):

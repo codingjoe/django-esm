@@ -1,5 +1,6 @@
 from django.contrib.staticfiles.finders import get_finder
 from django.core.checks import Error
+import warnings
 
 from django_esm import storages
 
@@ -17,8 +18,18 @@ class TestESMFinder:
             self.finder.find("testapp/static/js/components/index.js")
             == "testapp/static/js/components/index.js"
         )
-        assert self.finder.find("lit-html/lit-html.js", all=True) == []
+        assert self.finder.find("lit-html/lit-html.js", find_all=True) == []
         assert self.finder.find("foo/bar.js") == []
+
+    def test_find_with_deprecated_param(self):
+        # Remove the test when Django 5.1 is no longer supported
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            result = self.finder.find("testapp/static/js/index.js", all=True)
+            assert len(w) == 1
+            assert issubclass(w[0].category, DeprecationWarning)
+            assert "deprecated in favor of" in str(w[0].message)
+            assert result == ["testapp/static/js/index.js"]
 
     def test_list(self):
         all_files = self.finder.list([])
