@@ -51,6 +51,7 @@ jobs:
         python-version:
           - "3.9"
           - "3.10"
+          - "3.11"
           - "3.12"
         django-version:
           - "4.2"  # LTS
@@ -78,10 +79,9 @@ jobs:
         python-version:
           - "3.11"
         django-version:
-          # LTS gets tested on all OS
-          - "3.2"
-          - "4.2"
-          - "5.0"
+          # oldest LTS gets tested on all Python versions
+          - "5.1"
+          - "5.2"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
