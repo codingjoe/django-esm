@@ -1,6 +1,7 @@
+import warnings
+
 from django.contrib.staticfiles.finders import get_finder
 from django.core.checks import Error
-import warnings
 
 from django_esm import storages
 
