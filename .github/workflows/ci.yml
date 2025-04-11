@@ -42,8 +42,8 @@ jobs:
         with:
           path: dist/*
 
-  pytest-django-lts:
-    name: PyTest Django LTS
+  pytest-python:
+    name: PyTest
     needs:
       - lint
     strategy:
@@ -52,9 +52,9 @@ jobs:
           - "3.9"
           - "3.10"
           - "3.11"
+          - "3.12"
         django-version:
           - "4.2"  # LTS
-          - "5.2"  # LTS
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -71,16 +71,15 @@ jobs:
           flags: py${{ matrix.python-version }}
 
   pytest-django:
-    name: PyTest Django
+    name: PyTest
     needs:
       - lint
     strategy:
       matrix:
         python-version:
-          - "3.12"
+          - "3.11"
         django-version:
-          # LTS gets tested on all Python versions
-          - "4.2"
+          # oldest LTS gets tested on all Python versions
           - "5.1"
           - "5.2"
     runs-on: ubuntu-latest
@@ -100,7 +99,7 @@ jobs:
 
   codeql:
     name: CodeQL
-    needs: [ dist, pytest-django-lts, pytest-django ]
+    needs: [ dist, pytest-python, pytest-django ]
     runs-on: ubuntu-latest
     permissions:
       actions: read

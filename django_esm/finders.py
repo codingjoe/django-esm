@@ -30,23 +30,29 @@ class ESMFinder(BaseFinder):
             ]
         return []
 
-    def _check_deprecated_find_param(self, find_all=False, **kwargs):
-        if "all" in kwargs:
-            warnings.warn(
-                "The 'all' argument of the find() method is deprecated in favor of "
-                "the 'find_all' argument.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
+    def _check_deprecated_find_param(self, find_all, **kwargs):
+        # @todo: remove this after Django 5.2 support is dropped
+        try:
             find_all = kwargs["all"]
+        except KeyError:
+            pass
+        else:
+            try:
+                from django.utils.deprecation import RemovedInDjango61Warning
+            except ImportError:
+                pass
+            else:
+                warnings.warn(
+                    "The 'all' argument of the find() method is deprecated in favor of "
+                    "the 'find_all' argument.",
+                    category=RemovedInDjango61Warning,
+                    stacklevel=2,
+                )
         return find_all
 
-    # RemovedInDjango61Warning: When the deprecation ends, replace with:
-    # def find(self, path, find_all=False):
     def find(self, path, find_all=False, **kwargs):
-        if kwargs:
-            find_all = self._check_deprecated_find_param(find_all=find_all, **kwargs)
-        
+        find_all = self._check_deprecated_find_param(find_all, **kwargs)
+
         if path in self.all:
             return [path] if find_all else path
         return []  # this method has a strange return type
