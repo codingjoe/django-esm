@@ -1,30 +1,43 @@
-import functools
 import json
+import pathlib
 
 from django import template
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.safestring import mark_safe
 
-from .. import utils
+from .. import conf
 
 register = template.Library()
 
+importmap_json = {}
+
+
+def _resolve_importmap_urls(raw_importmap):
+    full_importmap = {
+        "imports": {},
+        "integrity": {},
+    }
+    for entry_pointy, filename in raw_importmap["imports"].items():
+        static_url = staticfiles_storage.url(
+            str(pathlib.Path(conf.get_settings().STATIC_PREFIX) / filename)
+        )
+        full_importmap["imports"][entry_pointy] = static_url
+        full_importmap["integrity"][static_url] = raw_importmap["integrity"][filename]
+    return json.dumps(
+        full_importmap,
+        indent=2 if settings.DEBUG else None,
+        separators=None if settings.DEBUG else (",", ":"),
+    )
+
 
 @register.simple_tag
-@functools.lru_cache()
 def importmap():
-    with (settings.BASE_DIR / "package.json").open() as f:
-        package_json = json.load(f)
-
-    imports = dict(utils.parse_root_package(package_json)) | dict(
-        utils.parse_dependencies(package_json)
-    )
-
-    return mark_safe(  # nosec
-        json.dumps(
-            {"imports": {k: staticfiles_storage.url(v) for k, v in imports.items()}},
-            indent=2 if settings.DEBUG else None,
-            separators=None if settings.DEBUG else (",", ":"),
-        )
-    )
+    global importmap_json
+    if not importmap_json or settings.DEBUG:
+        with (
+            pathlib.Path(conf.get_settings().STATIC_DIR) / "importmap.json"
+        ).open() as f:
+            raw_importmap = json.load(f)
+            importmap_json = _resolve_importmap_urls(raw_importmap)
+    return mark_safe(importmap_json)  # nosec

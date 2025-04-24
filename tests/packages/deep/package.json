@@ -5,6 +5,6 @@
       "import": "./index.js"
     },
     "./*": "./*",
-    "./utils": ["./utils/a.js"]
+    "./utils": "./utils/a.js"
   }
 }

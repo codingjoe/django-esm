@@ -2,6 +2,7 @@
   "name": "flat2",
   "exports": {
     "node": "./index.js",
-    "import": "./index.js"
+    "import": "./index.js",
+    "default": "./index.js"
   }
 }

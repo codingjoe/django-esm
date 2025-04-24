@@ -5,8 +5,7 @@
       "import": "./testapp/static/js/index.js",
       "default": "./testapp/static/js/index.js"
     },
-    "#components/*": "./testapp/static/js/components/*",
-    "#htmx": "https://unpkg.com/htmx.org@1.9.10"
+    "#components/*": "./testapp/static/js/components/*"
   },
   "dependencies": {
     "deep": "file:packages/deep",

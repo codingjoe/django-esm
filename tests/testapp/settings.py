@@ -30,8 +30,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.staticfiles",
     "django_esm",
+    "django.contrib.staticfiles",
     "tests.testapp",
 ]
 
@@ -71,6 +71,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+ESM = {"PACKAGE_DIR": BASE_DIR, "STATIC_DIR": BASE_DIR / "esm", "STATIC_PREFIX": "esm"}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -78,10 +79,5 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
-    BASE_DIR / "node_modules",
-]
-STATICFILES_FINDERS = [
-    "django.contrib.staticfiles.finders.FileSystemFinder",
-    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    "django_esm.finders.ESMFinder",
+    (ESM["STATIC_PREFIX"], ESM["STATIC_DIR"]),
 ]

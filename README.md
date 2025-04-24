@@ -26,37 +26,29 @@ pip install django-esm
 # settings.py
 INSTALLED_APPS = [
     # …
-    'django_esm',
+    "django_esm",  # add django_esm before staticfiles
+    "django.contrib.staticfiles",
 ]
 ```
 
-Next, add a new staticfiles finder to your `STATICFILES_FINDERS` setting:
-
-```python
-# settings.py
-STATICFILES_FINDERS = [
-    # Django's default finders
-    "django.contrib.staticfiles.finders.FileSystemFinder",
-    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    # django-esm finder
-    "django_esm.finders.ESMFinder",
-]
-```
-
-You will also need to expose your `node_modules` directory to Django's
-staticfiles finder. You may run `npm ci --omit=dev` prior to running
-`collectstatic` to avoid exposing your `devDependencies` publicly.
+Next, lets configure Django-ESM:
 
 ```python
 # settings.py
 from pathlib import Path
 
-# add BASE_DIR (if not already present)
+# add BASE_DIR setting (if not already present)
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+ESM = {
+    "PACKAGE_DIR": BASE_DIR,  # path to a directory containing a package.json file
+    "STATIC_DIR": BASE_DIR / "esm", # target directory to collect ES modules into
+    "STATIC_PREFIX": "esm", # prefix for the ES module URLs
+}
 
 STATICFILES_DIRS = [
     # …
-    BASE_DIR / "node_modules",
+    (ESM["STATIC_PREFIX"], ESM["STATIC_DIR"]),
 ]
 ```
 
@@ -69,12 +61,13 @@ Finally, add the import map to your base template:
 <html lang="en">
 <head>
   <script type="importmap">{% importmap %}</script>
+  <title>Django ESM is awesome!</title>
 </head>
 </html>
 ```
 
 That's it!
-Don't forget to run `npm install` and `python manage.py collectstatic`.
+Remember to run `npm install` and `python manage.py esm --watch`.
 
 ## Usage
 
@@ -84,8 +77,7 @@ You can now import JavaScript modules in your Django templates:
 <!-- index.html -->
 {% block content %}
   <script type="module">
-    import "htmx.org"
-    htmx.logAll()
+    import "lit"
   </script>
 {% endblock %}
 ```
