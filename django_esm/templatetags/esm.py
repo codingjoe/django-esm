@@ -1,9 +1,9 @@
 import json
 import pathlib
+import re
 
 from django import template
 from django.conf import settings
-from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.safestring import mark_safe
 
 from .. import conf
@@ -19,9 +19,12 @@ def _resolve_importmap_urls(raw_importmap):
         "integrity": {},
     }
     for entry_pointy, filename in raw_importmap["imports"].items():
-        static_url = staticfiles_storage.url(
-            str(pathlib.Path(conf.get_settings().STATIC_PREFIX) / filename)
-        )
+        if re.match("^https?://", filename):
+            static_url = filename
+        else:
+            static_url = str(
+                pathlib.Path("/") / conf.get_settings().STATIC_PREFIX / filename
+            )
         full_importmap["imports"][entry_pointy] = static_url
         full_importmap["integrity"][static_url] = raw_importmap["integrity"][filename]
     return json.dumps(

@@ -18,6 +18,12 @@ class Command(BaseCommand):
             action="store_true",
             help="Watch for changes in the package directory and re-run collect files.",
         )
+        parser.add_argument(
+            "-s",
+            "--serve",
+            action="store_true",
+            help="Serve the files using esimport.",
+        )
 
     def handle(self, *args, **options):
         subprocess.check_call(  # nosec
@@ -30,6 +36,7 @@ class Command(BaseCommand):
                     get_settings().STATIC_DIR,
                 ]
                 + (["--watch"] if options["watch"] else [])
+                + (["--serve"] if options["serve"] else [])
             ),
             stdout=sys.stdout,
             stderr=sys.stderr,

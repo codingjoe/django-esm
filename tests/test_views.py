@@ -1,7 +1,3 @@
-import os
-
-
-def test_importmap(page, live_server):
-    os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
-    page.goto(live_server.url)
-    assert """<script type="importmap">{"imports":{""" in page.content()
+def test_importmap(client, live_server):
+    response = client.get(live_server.url)
+    assert b"""<script type="importmap">{"imports":{""" in response.content

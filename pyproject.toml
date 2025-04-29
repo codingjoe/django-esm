@@ -33,14 +33,18 @@ classifiers = [
   "Framework :: Django :: 5.2",
 ]
 requires-python = ">=3.9"
-dependencies = ["django>=4.2.0"]
+dependencies = [
+  "django>=4.2.0",
+]
 
 [project.optional-dependencies]
+whitenoise = [
+  "whitenoise>=6.0",
+]
 test = [
   "pytest",
   "pytest-cov",
   "pytest-django",
-  "pytest-playwright",
 ]
 lint = [
   "bandit==1.8.3",

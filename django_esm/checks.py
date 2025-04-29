@@ -1,6 +1,5 @@
 import pathlib
 
-from django.conf import settings
 from django.core.checks import Error, Tags, Warning, register
 
 from . import conf
@@ -66,23 +65,12 @@ def check_esm_settings(app_configs, **kwargs):
             )
         )
 
-    if (
-        conf.get_settings().STATIC_PREFIX,
-        conf.get_settings().STATIC_DIR,
-    ) not in settings.STATICFILES_DIRS:
-        errors.append(
-            Error(
-                '\'(ESM["STATIC_PREFIX"], ESM["STATIC_DIR"]),\' must be in STATICFILES_DIRS.',
-                id="esm.E006",
-            )
-        )
-
     if not (pathlib.Path(conf.get_settings().PACKAGE_DIR) / "package.json").exists():
         errors.append(
             Error(
                 f"package.json file not found in: {conf.get_settings().PACKAGE_DIR}",
                 hint='Make sure check your ESM["PACKAGE_DIR"] setting.',
-                id="esm.E007",
+                id="esm.E006",
             )
         )
 
@@ -111,7 +99,7 @@ def check_deployment(app_configs, **kwargs):
                 hint=(
                     'Make sure check your ESM["STATIC_DIR"] setting and to run the "esm" management command to generate the importmap.json file.'
                 ),
-                id="esm.E008",
+                id="esm.E007",
             )
         )
 
