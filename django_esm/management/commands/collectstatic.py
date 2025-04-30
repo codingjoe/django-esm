@@ -29,4 +29,19 @@ class Command(collectstatic.Command):
                 stdout=sys.stdout,
                 stderr=sys.stderr,
             )
+            try:
+                import whitenoise  # noqa
+            except ImportError:
+                pass
+            else:
+                subprocess.check_call(  # nosec
+                    [
+                        "python3",
+                        "-m",
+                        "whitenoise.compress",
+                        get_settings().STATIC_DIR,
+                    ],
+                    stdout=sys.stdout,
+                    stderr=sys.stderr,
+                )
         super().handle(**options)

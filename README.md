@@ -19,8 +19,10 @@ NextGen JavaScript ESM module support for Django.
 Install the package and add it to your `INSTALLED_APPS` setting:
 
 ```bash
-pip install django-esm
+pip install django-esm[whitenoise]
 ```
+
+First, add `django_esm` to your `INSTALLED_APPS` settings:
 
 ```python
 # settings.py
@@ -31,25 +33,26 @@ INSTALLED_APPS = [
 ]
 ```
 
-Next, lets configure Django-ESM:
+Optionally: If you are using whitenoise you will need to modify your WSGI application.
 
 ```python
-# settings.py
-from pathlib import Path
+import os
+import pathlib
 
-# add BASE_DIR setting (if not already present)
-BASE_DIR = Path(__file__).resolve().parent.parent
+from django.core.wsgi import get_wsgi_application
 
-ESM = {
-    "PACKAGE_DIR": BASE_DIR,  # path to a directory containing a package.json file
-    "STATIC_DIR": BASE_DIR / "esm", # target directory to collect ES modules into
-    "STATIC_PREFIX": "esm", # prefix for the ES module URLs
-}
+from django_esm.wsgi import ESM
 
-STATICFILES_DIRS = [
-    # …
-    (ESM["STATIC_PREFIX"], ESM["STATIC_DIR"]),
-]
+BASE_DIR = pathlib.Path(__file__).parent.parent
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "myproject.settings")
+
+application = get_wsgi_application()
+application = ESM(
+    application,
+    root=BASE_DIR / "staticfiles" / "esm",
+    prefix="esm",
+)
 ```
 
 Finally, add the import map to your base template:
@@ -105,23 +108,6 @@ You need to define your private modules in your `package.json` file:
     // You may use trailing stars to import all files in a directory.
     "#myapp/*": "./myapp/static/js/*"
   }
-}
-```
-
-### Testing (with Jest)
-
-You can use the `django_esm` package to test your JavaScript modules with Jest.
-Jest v27.4 and upwards will honor `imports` in your `package.json` file.
-
-Before v27.4 that, you can try to use a custom `moduleNameMapper`, like so:
-
-```js
-// jest.config.js
-module.exports = {
-  // …
-  moduleNameMapper: {
-    '^#(.*)$': '<rootDir>/staticfiles/js/$1' // @todo: remove this with Jest >=29.4
-  },
 }
 ```
 

@@ -64,7 +64,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: python -m pip install .[test]
       - run: python -m pip install django~=${{ matrix.django-version }}.0
-      - run: python -m playwright install
       - run: python -m pytest
       - uses: codecov/codecov-action@v5
         with:
@@ -91,11 +90,31 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: python -m pip install .[test]
       - run: python -m pip install django~=${{ matrix.django-version }}.0
-      - run: python -m playwright install
       - run: python -m pytest
       - uses: codecov/codecov-action@v5
         with:
           flags: dj${{ matrix.django-version }}
+
+  pytest-extras:
+    name: PyTest
+    needs:
+      - lint
+    strategy:
+      matrix:
+        extras:
+          - "whitenoise"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - run: python -m pip install .[test,${{ matrix.extras }}]
+      - run: python -m pytest
+      - uses: codecov/codecov-action@v5
+        with:
+          flags: dj${{ matrix.extras }}
 
   codeql:
     name: CodeQL
