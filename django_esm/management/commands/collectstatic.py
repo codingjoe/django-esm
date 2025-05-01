@@ -25,12 +25,13 @@ class Command(collectstatic.Command):
                     "esimport",
                     get_settings().PACKAGE_DIR,
                     get_settings().STATIC_DIR,
-                ],
-                stdout=sys.stdout,
+                ]
+                + (["--verbose"] if options["verbosity"] > 1 else []),
+                stdout=sys.stdout if options["verbosity"] else subprocess.DEVNULL,
                 stderr=sys.stderr,
             )
             try:
-                import whitenoise  # noqa
+                import whitenoise.compress  # noqa
             except ImportError:
                 pass
             else:
@@ -41,7 +42,11 @@ class Command(collectstatic.Command):
                         "whitenoise.compress",
                         get_settings().STATIC_DIR,
                     ],
-                    stdout=sys.stdout,
+                    stdout=(
+                        sys.stdout if options["verbosity"] > 1 else subprocess.DEVNULL
+                    ),
                     stderr=sys.stderr,
                 )
+                if options["verbosity"]:
+                    self.stdout.write("ES modules compressed.")
         super().handle(**options)

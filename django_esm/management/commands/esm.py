@@ -37,6 +37,7 @@ class Command(BaseCommand):
                 ]
                 + (["--watch"] if options["watch"] else [])
                 + (["--serve"] if options["serve"] else [])
+                + (["--verbose"] if options["verbosity"] > 1 else [])
             ),
             stdout=sys.stdout,
             stderr=sys.stderr,
