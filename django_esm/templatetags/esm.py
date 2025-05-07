@@ -37,10 +37,12 @@ def _resolve_importmap_urls(raw_importmap):
 @register.simple_tag
 def importmap():
     global importmap_json
+    print(not importmap_json or settings.DEBUG)
     if not importmap_json or settings.DEBUG:
         with (
             pathlib.Path(conf.get_settings().STATIC_DIR) / "importmap.json"
         ).open() as f:
             raw_importmap = json.load(f)
             importmap_json = _resolve_importmap_urls(raw_importmap)
+        print(importmap_json)
     return mark_safe(importmap_json)  # nosec
