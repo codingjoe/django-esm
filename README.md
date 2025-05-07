@@ -47,12 +47,7 @@ BASE_DIR = pathlib.Path(__file__).parent.parent
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "myproject.settings")
 
-application = get_wsgi_application()
-application = ESM(
-    application,
-    root=BASE_DIR / "staticfiles" / "esm",
-    prefix="esm",
-)
+application = ESM(get_wsgi_application())
 ```
 
 Finally, add the import map to your base template:
