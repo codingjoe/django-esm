@@ -80,6 +80,29 @@ You can now import JavaScript modules in your Django templates:
 {% endblock %}
 ```
 
+### Form.media
+
+To use your importmap in Django forms, you can use the `Form.media` attribute:
+
+```python
+# forms.py
+from django import forms
+from django_esm.forms import ImportESModule
+
+
+class MyForm(forms.Form):
+    name = forms.CharField()
+
+    class Media:
+        js = [ImportESModule("@sentry/browser")]
+```
+
+Now `{{ form.media.js }}` will render to like this:
+
+```html
+<script type="module">import '@sentry/browser'</script>
+```
+
 ### Private modules
 
 You can also import private modules from your Django app:
