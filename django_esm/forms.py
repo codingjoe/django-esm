@@ -1,6 +1,6 @@
 try:
     from django.forms import Script
-except ImportError:
+except ImportError:  # pragma: no cover
     # Django < 5.2 backport
     from django.forms.utils import flatatt
     from django.templatetags.static import static
