@@ -41,6 +41,9 @@ dependencies = [
 whitenoise = [
   "whitenoise>=6.0",
 ]
+csp = [
+  "django-csp",
+]
 test = [
   "pytest",
   "pytest-cov",

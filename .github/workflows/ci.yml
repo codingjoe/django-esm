@@ -68,6 +68,7 @@ jobs:
       - uses: codecov/codecov-action@v5
         with:
           flags: py${{ matrix.python-version }}
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   pytest-django:
     name: PyTest
@@ -94,6 +95,7 @@ jobs:
       - uses: codecov/codecov-action@v5
         with:
           flags: dj${{ matrix.django-version }}
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   pytest-extras:
     name: PyTest
@@ -115,6 +117,7 @@ jobs:
       - uses: codecov/codecov-action@v5
         with:
           flags: dj${{ matrix.extras }}
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   codeql:
     name: CodeQL
