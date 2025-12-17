@@ -4,13 +4,13 @@
     <path stroke-linejoin="round" stroke-width="30" d="M262 462c75.4 0 136.5-62.68 136.5-140S337.38 182 262 182s-136.5 62.68-136.5 140S186.62 462 262 462" clip-rule="evenodd"/>
     <path stroke-width="30" d="M134.92 373.22c127.08-74.56 195.34-27.88 254.16 0"/>
   </g>
-  <text x="243" y="80" font-size="64" font-weight="bold" transform="matrix(1.6 0 0 1.6 120 120)">
+  <text x="243" y="90" font-size="64" fill="#092e20" font-weight="bold" transform="matrix(1.6 0 0 1.6 120 120)">
     Django
   </text>
-  <text x="240" y="190" font-size="120" font-weight="bold" transform="matrix(1.6 0 0 1.6 120 120)">
-    ESM
+  <text x="240" y="174" font-size="92" font-weight="bold" transform="matrix(1.6 0 0 1.6 120 120)">
+    ESModule
   </text>
-  <text x="244" y="224" font-size="18" font-style="italic" transform="matrix(1.6 0 0 1.6 120 120)">
+  <text x="244" y="210" font-size="18" font-style="italic" transform="matrix(1.6 0 0 1.6 120 120)">
     NextGen JavaScript ESM module support for Django
   </text>
 </svg>
