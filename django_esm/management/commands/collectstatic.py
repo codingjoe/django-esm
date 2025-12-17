@@ -1,4 +1,4 @@
-import subprocess  # nosec
+import subprocess
 import sys
 
 from django.contrib.staticfiles.management.commands import collectstatic
@@ -18,7 +18,7 @@ class Command(collectstatic.Command):
 
     def handle(self, **options):
         if not options["no_esm"]:
-            subprocess.check_call(  # nosec
+            subprocess.check_call(  # noqa: S603, S607
                 [
                     "npx",
                     "--yes",
@@ -35,9 +35,9 @@ class Command(collectstatic.Command):
             except ImportError:
                 pass
             else:
-                subprocess.check_call(  # nosec
+                subprocess.check_call(  # noqa: S603
                     [
-                        "python3",
+                        sys.executable,
                         "-m",
                         "whitenoise.compress",
                         get_settings().STATIC_DIR,

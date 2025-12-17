@@ -1,5 +1,13 @@
 # Django ESM
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/codingjoe/django-esm/raw/main/images/logo-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://github.com/codingjoe/django-esm/raw/main/images/logo-light.svg">
+    <img alt="Django ESM: NextGen JavaScript ESM module support for Django" src="https://github.com/codingjoe/django-esm/raw/main/images/logo-light.svg">
+  </picture>
+</p>
+
 NextGen JavaScript ESM module support for Django.
 
 [![PyPi Version](https://img.shields.io/pypi/v/django-esm.svg)](https://pypi.python.org/pypi/django-esm/)
@@ -8,11 +16,11 @@ NextGen JavaScript ESM module support for Django.
 
 ## Highlights
 
-* easy transition
-* smart cache busting
-* no more bundling
-* native ESM support
-* local vendoring with npm
+- easy transition
+- smart cache busting
+- no more bundling
+- native ESM support
+- local vendoring with npm
 
 ## Setup
 

@@ -43,4 +43,4 @@ def importmap():
         ).open() as f:
             raw_importmap = json.load(f)
             importmap_json = _resolve_importmap_urls(raw_importmap)
-    return mark_safe(importmap_json)  # nosec
+    return mark_safe(importmap_json)  # noqa: S308

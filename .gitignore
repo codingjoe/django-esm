@@ -169,3 +169,6 @@ package-lock.json
 
 # Django
 tests/staticfiles/
+
+# Node.js
+node_modules/
