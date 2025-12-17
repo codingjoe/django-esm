@@ -16,11 +16,11 @@ NextGen JavaScript ESM module support for Django.
 
 ## Highlights
 
-- easy transition
-- smart cache busting
-- no more bundling
-- native ESM support
-- local vendoring with npm
+- 😌easy transition
+- ⚡️smart cache busting
+- 📦no more bundling
+- ☕️native ESM support
+- 📍local vendoring with npm
 
 ## Setup
 
