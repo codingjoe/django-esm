@@ -11,7 +11,7 @@ def get_settings():
         (),
         {
             "PACKAGE_DIR": Path(getattr(settings, "BASE_DIR", "")),
-            "STATIC_DIR": Path(getattr(settings, "STATIC_ROOT")) / "esm",
+            "STATIC_DIR": Path(settings.STATIC_ROOT) / "esm",
             "STATIC_PREFIX": "esm",
             **getattr(settings, "ESM", {}),
         },

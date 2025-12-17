@@ -1,4 +1,4 @@
-import subprocess  # nosec
+import subprocess
 import sys
 
 from django.core.management import BaseCommand
@@ -26,7 +26,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        subprocess.check_call(  # nosec
+        subprocess.check_call(  # noqa: S603
             (
                 [
                     "npx",

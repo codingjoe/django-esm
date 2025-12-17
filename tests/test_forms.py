@@ -2,7 +2,6 @@ from django_esm import forms
 
 
 class TestImportESModule:
-
     def test_str(self):
         assert str(forms.ImportESModule("@sentry/browser")) == (
             """<script type="module">import '@sentry/browser'</script>"""

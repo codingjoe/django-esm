@@ -2,7 +2,6 @@ from unittest.mock import Mock
 
 import pytest
 from django.core.management import call_command
-
 from django_esm.conf import get_settings
 
 
@@ -71,8 +70,7 @@ def test_collectstatic__whitenoise(monkeypatch):
         get_settings().PACKAGE_DIR,
         get_settings().STATIC_DIR,
     ]
-    assert check_call.call_args_list[1][0][0] == [
-        "python3",
+    assert check_call.call_args_list[1][0][0][1:] == [
         "-m",
         "whitenoise.compress",
         get_settings().STATIC_DIR,

@@ -23,38 +23,25 @@ classifiers = [
   "Programming Language :: JavaScript",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Framework :: Django",
   "Framework :: Django :: 4.2",
   "Framework :: Django :: 5.1",
   "Framework :: Django :: 5.2",
+  "Framework :: Django :: 6.0",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
-  "django>=4.2.0",
+  "django>=4.2",
 ]
 
 [project.optional-dependencies]
 whitenoise = [
   "whitenoise>=6.0",
-]
-csp = [
-  "django-csp",
-]
-test = [
-  "pytest",
-  "pytest-cov",
-  "pytest-django",
-]
-lint = [
-  "bandit==1.8.6",
-  "black==25.11.0",
-  "flake8==7.3.0",
-  "isort==6.1.0",
-  "pydocstyle[toml]==6.3.0",
 ]
 
 [project.urls]
@@ -83,14 +70,44 @@ source = ["django_esm"]
 show_missing = true
 omit = ["django_esm/_version.py", "tests/*"]
 
-[tool.isort]
-atomic = true
-line_length = 88
-known_first_party = "django_esm, tests"
-include_trailing_comma = true
-default_section = "THIRDPARTY"
-combine_as_imports = true
-skip = ["django_esm/_version.py"]
+[tool.ruff]
+src = ["crontask", "tests"]
 
-[tool.pydocstyle]
-add_ignore = "D1"
+[tool.ruff.lint]
+select = [
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # pyflakes
+    "I", # isort
+    "S", # flake8-bandit
+    "D", # pydocstyle
+    "UP", # pyupgrade
+    "B", # flake8-bugbear
+    "C", # flake8-comprehensions
+]
+
+ignore = ["B904", "D1", "E501", "S101"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+  "S",
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+split-on-trailing-comma = true
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+force-wrap-aliases = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
+[dependency-groups]
+dev = [
+  { include-group = "test" },
+]
+test = [
+  "pytest",
+  "pytest-cov",
+  "pytest-django",
+]
