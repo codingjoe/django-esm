@@ -166,6 +166,8 @@ _version.py
 node_modules/
 package-lock.json
 
+# uv
+uv.lock
 
 # Django
 tests/staticfiles/
