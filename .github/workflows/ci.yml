@@ -53,7 +53,6 @@ jobs:
           - "3.12"
         django-version:
           # oldest LTS gets tested on all Python versions
-          - "5.1"
           - "5.2"
           - "6.0"
     runs-on: ubuntu-latest
