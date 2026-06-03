@@ -14,6 +14,10 @@ NextGen JavaScript ESM module support for Django.
 [![Test Coverage](https://codecov.io/gh/codingjoe/django-esm/branch/main/graph/badge.svg)](https://codecov.io/gh/codingjoe/django-esm)
 [![GitHub License](https://img.shields.io/github/license/codingjoe/django-esm)](https://raw.githubusercontent.com/codingjoe/django-esm/master/LICENSE)
 
+## Sponsors
+
+[![Sponsors](https://django.the-box.sh/sponsors/codingjoe/django-esm.svg)](https://github.com/sponsors/codingjoe)
+
 ## Highlights
 
 - 😌 easy transition
