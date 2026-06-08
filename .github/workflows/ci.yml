@@ -41,7 +41,7 @@ jobs:
           npm install
       - run: uv run tests/manage.py collectstatic --noinput
       - run: uv run ${{ matrix.extras }} --with django~=${{ matrix.django-version }}.0 pytest
-      - uses: codecov/codecov-action@v6
+      - uses: codecov/codecov-action@v7
         with:
           flags: py${{ matrix.python-version }}
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -69,7 +69,7 @@ jobs:
           npm install
       - run: uv run tests/manage.py collectstatic --noinput
       - run: uv run ${{ matrix.extras }} --with django~=${{ matrix.django-version }}.0 pytest
-      - uses: codecov/codecov-action@v6
+      - uses: codecov/codecov-action@v7
         with:
           flags: dj${{ matrix.django-version }}
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -91,7 +91,7 @@ jobs:
           npm install
       - run: uv run tests/manage.py collectstatic --noinput
       - run: uv run ${{ matrix.extras }} pytest
-      - uses: codecov/codecov-action@v6
+      - uses: codecov/codecov-action@v7
         with:
           flags: dj${{ matrix.extras }}
           token: ${{ secrets.CODECOV_TOKEN }}
