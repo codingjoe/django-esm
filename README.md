@@ -81,7 +81,8 @@ Remember to run `npm install` and `python manage.py esm --watch`.
 
 ### Treeshaking
 
-By default, every package entry point ends up in the import map.
+By default, every package [entry point](https://nodejs.org/api/packages.html#package-entry-points)
+ends up in the import map.
 Pass `--treeshake` to drop entry points that are not reachable from your
 project's own entry points, keeping only the outputs actually imported:
 
