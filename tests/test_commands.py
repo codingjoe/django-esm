@@ -36,6 +36,22 @@ def test_check_esm_settings__watch(monkeypatch):
     ]
 
 
+def test_check_esm_settings__treeshake(monkeypatch):
+    check_call = Mock()
+    monkeypatch.setattr("subprocess.check_call", check_call)
+    call_command("esm", "--treeshake")
+    assert check_call.called
+    assert check_call.call_count == 1
+    assert check_call.call_args[0][0] == [
+        "npx",
+        "--yes",
+        "esimport",
+        get_settings().PACKAGE_DIR,
+        get_settings().STATIC_DIR,
+        "--treeshake",
+    ]
+
+
 def test_collectstatic(monkeypatch):
     check_call = Mock()
     monkeypatch.setattr("subprocess.check_call", check_call)

@@ -24,6 +24,12 @@ class Command(BaseCommand):
             action="store_true",
             help="Serve the files using esimport.",
         )
+        parser.add_argument(
+            "-t",
+            "--treeshake",
+            action="store_true",
+            help="Drop unused entry points from the import map.",
+        )
 
     def handle(self, *args, **options):
         subprocess.check_call(  # noqa: S603
@@ -37,6 +43,7 @@ class Command(BaseCommand):
                 ]
                 + (["--watch"] if options["watch"] else [])
                 + (["--serve"] if options["serve"] else [])
+                + (["--treeshake"] if options["treeshake"] else [])
                 + (["--verbose"] if options["verbosity"] > 1 else [])
             ),
             stdout=sys.stdout,

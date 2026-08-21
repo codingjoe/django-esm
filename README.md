@@ -79,6 +79,16 @@ Finally, add the import map to your base template:
 That's it!
 Remember to run `npm install` and `python manage.py esm --watch`.
 
+### Treeshaking
+
+By default, every package entry point ends up in the import map.
+Pass `--treeshake` to drop entry points that are not reachable from your
+project's own entry points, keeping only the outputs actually imported:
+
+```bash
+python manage.py esm --watch --treeshake
+```
+
 ## Usage
 
 You can now import JavaScript modules in your Django templates:
