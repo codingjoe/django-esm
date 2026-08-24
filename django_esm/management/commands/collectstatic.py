@@ -15,6 +15,12 @@ class Command(collectstatic.Command):
             action="store_true",
             help="Do not collect ES modules before collecting static files.",
         )
+        parser.add_argument(
+            "--treeshake",
+            "-t",
+            action="store_true",
+            help="Drop unused entry points from the import map.",
+        )
 
     def handle(self, **options):
         if not options["no_esm"]:
@@ -26,6 +32,7 @@ class Command(collectstatic.Command):
                     get_settings().PACKAGE_DIR,
                     get_settings().STATIC_DIR,
                 ]
+                + (["--treeshake"] if options["treeshake"] else [])
                 + (["--verbose"] if options["verbosity"] > 1 else []),
                 stdout=sys.stdout if options["verbosity"] else subprocess.DEVNULL,
                 stderr=sys.stderr,

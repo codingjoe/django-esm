@@ -98,3 +98,24 @@ def test_collectstatic__noesm(monkeypatch):
     monkeypatch.setattr("subprocess.check_call", check_call)
     call_command("collectstatic", "--noesm", "--noinput")
     assert not check_call.called
+
+
+def test_collectstatic__treeshake(monkeypatch):
+    check_call = Mock()
+    monkeypatch.setattr("subprocess.check_call", check_call)
+    call_command("collectstatic", "--noinput", "--treeshake")
+    assert check_call.called
+    try:
+        import whitenoise  # noqa
+    except ImportError:
+        assert check_call.call_count == 1
+    else:
+        assert check_call.call_count == 2
+    assert check_call.call_args_list[0][0][0] == [
+        "npx",
+        "--yes",
+        "esimport",
+        get_settings().PACKAGE_DIR,
+        get_settings().STATIC_DIR,
+        "--treeshake",
+    ]
