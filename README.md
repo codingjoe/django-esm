@@ -90,12 +90,6 @@ project's own entry points, keeping only the outputs actually imported:
 python manage.py esm --watch --treeshake
 ```
 
-`collectstatic` accepts the same flag, so apply tree shaking during deployment:
-
-```bash
-python manage.py collectstatic --noinput --treeshake
-```
-
 ## Usage
 
 You can now import JavaScript modules in your Django templates:
