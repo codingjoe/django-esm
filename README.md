@@ -53,21 +53,17 @@ pass every other request to the wrapped application:
 ```python
 import os
 
+from django.core.asgi import get_asgi_application
 from django.core.wsgi import get_wsgi_application
 
-from django_esm.wsgi import ESM
+from django_esm import asgi, wsgi
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "myproject.settings")
 
-application = ESM(get_wsgi_application())
+# runserver serves wsgi_app via WSGI_APPLICATION; ASGI servers serve asgi_app.
+wsgi_app = wsgi.ESM(get_wsgi_application())
+asgi_app = asgi.ESM(get_asgi_application())
 ```
-
-For ASGI, swap in `django.core.asgi.get_asgi_application` and
-`django_esm.asgi.ESM`.
-
-`manage.py runserver` loads `WSGI_APPLICATION`, so even an ASGI-deployed project
-is served by the WSGI wrapper in development. For ASGI, point uvicorn or daphne
-at the wrapped application object, for example `uvicorn myproject.asgi:application`.
 
 Finally, add the import map to your base template:
 
