@@ -48,9 +48,7 @@ INSTALLED_APPS = [
 ```
 
 Wrap your WSGI or ASGI application to serve the built output at `/esm/` and
-pass every other request to the wrapped application.
-
-WSGI application:
+pass every other request to the wrapped application:
 
 ```python
 import os
@@ -64,19 +62,8 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "myproject.settings")
 application = ESM(get_wsgi_application())
 ```
 
-ASGI application:
-
-```python
-import os
-
-from django.core.asgi import get_asgi_application
-
-from django_esm.asgi import ESM
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "myproject.settings")
-
-application = ESM(get_asgi_application())
-```
+For ASGI, swap in `django.core.asgi.get_asgi_application` and
+`django_esm.asgi.ESM`.
 
 `manage.py runserver` loads `WSGI_APPLICATION`, so even an ASGI-deployed project
 is served by the WSGI wrapper in development. For ASGI, point uvicorn or daphne
