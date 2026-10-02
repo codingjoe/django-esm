@@ -38,7 +38,7 @@ class Command(collectstatic.Command):
                 stderr=sys.stderr,
             )
             try:
-                import whitenoise.compress  # noqa
+                import servestatic.compress  # noqa
             except ImportError:
                 pass
             else:
@@ -46,7 +46,7 @@ class Command(collectstatic.Command):
                     [
                         sys.executable,
                         "-m",
-                        "whitenoise.compress",
+                        "servestatic.compress",
                         get_settings().STATIC_DIR,
                     ],
                     stdout=(

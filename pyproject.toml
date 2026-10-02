@@ -37,8 +37,12 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+servestatic = [
+  "servestatic>=4.3.4",
+]
+# deprecated alias for the servestatic extra
 whitenoise = [
-  "whitenoise>=6.12.0",
+  "servestatic>=4.3.4",
 ]
 
 [project.urls]

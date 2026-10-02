@@ -28,11 +28,13 @@ NextGen JavaScript ESM module support for Django.
 
 ## Setup
 
-Install the package and add it to your `INSTALLED_APPS` setting:
+Install the package:
 
 ```bash
-pip install django-esm[whitenoise]
+pip install django-esm[servestatic]
 ```
+
+`django-esm[whitenoise]` still works as a deprecated alias for `django-esm[servestatic]`.
 
 First, add `django_esm` to your `INSTALLED_APPS` settings:
 
@@ -45,22 +47,40 @@ INSTALLED_APPS = [
 ]
 ```
 
-Optionally: If you are using whitenoise you will need to modify your WSGI application.
+Wrap your WSGI or ASGI application to serve the built output at `/esm/` and
+pass every other request to the wrapped application.
+
+WSGI application:
 
 ```python
 import os
-import pathlib
 
 from django.core.wsgi import get_wsgi_application
 
 from django_esm.wsgi import ESM
 
-BASE_DIR = pathlib.Path(__file__).parent.parent
-
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "myproject.settings")
 
 application = ESM(get_wsgi_application())
 ```
+
+ASGI application:
+
+```python
+import os
+
+from django.core.asgi import get_asgi_application
+
+from django_esm.asgi import ESM
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "myproject.settings")
+
+application = ESM(get_asgi_application())
+```
+
+`manage.py runserver` loads `WSGI_APPLICATION`, so even an ASGI-deployed project
+is served by the WSGI wrapper in development. For ASGI, point uvicorn or daphne
+at the wrapped application object, for example `uvicorn myproject.asgi:application`.
 
 Finally, add the import map to your base template:
 
@@ -77,7 +97,25 @@ Finally, add the import map to your base template:
 ```
 
 That's it!
-Remember to run `npm install` and `python manage.py esm --watch`.
+
+### Development
+
+Install the JavaScript dependencies once, then rebuild `STATIC_DIR` on every
+change:
+
+```bash
+npm install
+python manage.py esm --watch
+```
+
+Run the development server in another terminal:
+
+```bash
+python manage.py runserver
+```
+
+With `DEBUG` enabled, the wrapper serves rebuilt files without a restart, and
+the import map is re-read on every request.
 
 ### Treeshaking
 
@@ -158,12 +196,13 @@ Django ESM works via native JavaScript module support in modern browsers.
 It uses the [import map](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap)
 to map module names to their location on the server.
 
-Here is an example import map:
+Here is an example import map. Entries resolve under `/esm/` and use
+content-hashed names:
 
 ```json
 {
   "imports": {
-    "htmx.org": "/static/htmx.org/dist/htmx.min.js"
+    "htmx.org": "/esm/node_modules/htmx.org/dist/htmx.min-<hash>.js"
   }
 }
 ```

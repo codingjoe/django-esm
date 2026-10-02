@@ -58,6 +58,7 @@ jobs:
         python-version:
           - "3.12"
         extra:
+          - "servestatic"
           - "whitenoise"
     runs-on: ubuntu-latest
     steps:
