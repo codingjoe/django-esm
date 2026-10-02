@@ -112,9 +112,6 @@ Run the development server in another terminal:
 python manage.py runserver
 ```
 
-With `DEBUG` enabled, the wrapper serves rebuilt files without a restart, and
-the import map is re-read on every request.
-
 ### Treeshaking
 
 By default, every package [entry point](https://nodejs.org/api/packages.html#package-entry-points)
