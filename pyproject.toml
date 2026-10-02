@@ -23,17 +23,16 @@ classifiers = [
   "Programming Language :: JavaScript",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
   "Framework :: Django",
-  "Framework :: Django :: 4.2",
   "Framework :: Django :: 5.2",
   "Framework :: Django :: 6.0",
+  "Framework :: Django :: 6.1",
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
   "django>=5.2.13",
 ]
