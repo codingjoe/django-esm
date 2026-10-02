@@ -4,8 +4,4 @@ from django_esm.base import ServeESM
 
 
 class ESM(ServeESM, ServeStatic):
-    """Lightweight WSGI ES module loader.
-
-    Serves the built modules under ``/esm/`` and delegates every other request
-    to the wrapped application.
-    """
+    """Lightweight WSGI ES module loader."""
