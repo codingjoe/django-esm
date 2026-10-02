@@ -37,23 +37,16 @@ class Command(collectstatic.Command):
                 stdout=sys.stdout if options["verbosity"] else subprocess.DEVNULL,
                 stderr=sys.stderr,
             )
-            try:
-                import whitenoise.compress  # noqa
-            except ImportError:
-                pass
-            else:
-                subprocess.check_call(  # noqa: S603
-                    [
-                        sys.executable,
-                        "-m",
-                        "whitenoise.compress",
-                        get_settings().STATIC_DIR,
-                    ],
-                    stdout=(
-                        sys.stdout if options["verbosity"] > 1 else subprocess.DEVNULL
-                    ),
-                    stderr=sys.stderr,
-                )
-                if options["verbosity"]:
-                    self.stdout.write("ES modules compressed.")
+            subprocess.check_call(  # noqa: S603
+                [
+                    sys.executable,
+                    "-m",
+                    "servestatic.compress",
+                    get_settings().STATIC_DIR,
+                ],
+                stdout=sys.stdout if options["verbosity"] > 1 else subprocess.DEVNULL,
+                stderr=sys.stderr,
+            )
+            if options["verbosity"]:
+                self.stdout.write("ES modules compressed.")
         super().handle(**options)

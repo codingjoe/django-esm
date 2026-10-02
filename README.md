@@ -28,10 +28,10 @@ NextGen JavaScript ESM module support for Django.
 
 ## Setup
 
-Install the package and add it to your `INSTALLED_APPS` setting:
+Install the package:
 
 ```bash
-pip install django-esm[whitenoise]
+pip install django-esm
 ```
 
 First, add `django_esm` to your `INSTALLED_APPS` settings:
@@ -45,21 +45,22 @@ INSTALLED_APPS = [
 ]
 ```
 
-Optionally: If you are using whitenoise you will need to modify your WSGI application.
+Wrap your WSGI or ASGI application to serve the built output at `/esm/` and
+pass every other request to the wrapped application:
 
 ```python
 import os
-import pathlib
 
+from django.core.asgi import get_asgi_application
 from django.core.wsgi import get_wsgi_application
 
-from django_esm.wsgi import ESM
-
-BASE_DIR = pathlib.Path(__file__).parent.parent
+from django_esm import asgi, wsgi
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "myproject.settings")
 
-application = ESM(get_wsgi_application())
+# runserver serves wsgi_app via WSGI_APPLICATION; ASGI servers serve asgi_app.
+wsgi_app = wsgi.ESM(get_wsgi_application())
+asgi_app = asgi.ESM(get_asgi_application())
 ```
 
 Finally, add the import map to your base template:
@@ -77,7 +78,20 @@ Finally, add the import map to your base template:
 ```
 
 That's it!
-Remember to run `npm install` and `python manage.py esm --watch`.
+
+### Development
+
+Rebuild `STATIC_DIR` on every change:
+
+```bash
+python manage.py esm --watch
+```
+
+Run the development server in another terminal:
+
+```bash
+python manage.py runserver
+```
 
 ### Treeshaking
 
@@ -158,12 +172,13 @@ Django ESM works via native JavaScript module support in modern browsers.
 It uses the [import map](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap)
 to map module names to their location on the server.
 
-Here is an example import map:
+Here is an example import map. Entries resolve under `/esm/` and use
+content-hashed names:
 
 ```json
 {
   "imports": {
-    "htmx.org": "/static/htmx.org/dist/htmx.min.js"
+    "htmx.org": "/esm/node_modules/htmx.org/dist/htmx.min-<hash>.js"
   }
 }
 ```

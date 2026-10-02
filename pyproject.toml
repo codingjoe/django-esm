@@ -34,12 +34,12 @@ classifiers = [
 requires-python = ">=3.12"
 dependencies = [
   "django>=5.2.13",
+  "servestatic>=4.3.4",
 ]
 
 [project.optional-dependencies]
-whitenoise = [
-  "whitenoise>=6.12.0",
-]
+# deprecated no-op alias; servestatic is a hard dependency
+whitenoise = []
 
 [project.urls]
 Project-URL = "https://github.com/codingjoe/django-esm"
