@@ -6,8 +6,7 @@ from wsgiref.simple_server import WSGIRequestHandler, make_server
 import pytest
 from django.contrib.staticfiles.handlers import StaticFilesHandler
 
-pytest.importorskip("servestatic")
-from tests.testapp.wsgi import application  # noqa: E402
+from tests.testapp.wsgi import application
 
 
 class _QuietRequestHandler(WSGIRequestHandler):

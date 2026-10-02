@@ -1,7 +1,6 @@
 import sys
 from unittest.mock import Mock
 
-import pytest
 from django.core.management import call_command
 from django_esm.conf import get_settings
 
@@ -53,11 +52,11 @@ def test_check_esm_settings__treeshake(monkeypatch):
     ]
 
 
-def test_collectstatic(monkeypatch):
+def test_collectstatic(monkeypatch, capsys):
     check_call = Mock()
     monkeypatch.setattr("subprocess.check_call", check_call)
     call_command("collectstatic", "--noinput")
-    assert check_call.called
+    assert check_call.call_count == 2
     assert check_call.call_args_list[0][0][0] == [
         "npx",
         "--yes",
@@ -65,15 +64,6 @@ def test_collectstatic(monkeypatch):
         get_settings().PACKAGE_DIR,
         get_settings().STATIC_DIR,
     ]
-
-
-def test_collectstatic__servestatic(monkeypatch, capsys):
-    pytest.importorskip("servestatic")
-    check_call = Mock()
-    monkeypatch.setattr("subprocess.check_call", check_call)
-    call_command("collectstatic", "--noinput")
-    assert check_call.called
-    assert check_call.call_count == 2
     assert check_call.call_args_list[1][0][0] == [
         sys.executable,
         "-m",
@@ -83,8 +73,7 @@ def test_collectstatic__servestatic(monkeypatch, capsys):
     assert "ES modules compressed." in capsys.readouterr().out
 
 
-def test_collectstatic__servestatic_quiet(monkeypatch, capsys):
-    pytest.importorskip("servestatic")
+def test_collectstatic__quiet(monkeypatch, capsys):
     check_call = Mock()
     monkeypatch.setattr("subprocess.check_call", check_call)
     call_command("collectstatic", "--noinput", verbosity=0)
@@ -99,13 +88,15 @@ def test_collectstatic__servestatic_quiet(monkeypatch, capsys):
     assert "ES modules compressed." not in capsys.readouterr().out
 
 
-def test_collectstatic__without_servestatic(monkeypatch):
-    monkeypatch.setitem(sys.modules, "servestatic.compress", None)
+def test_collectstatic__verbose(monkeypatch, capsys):
     check_call = Mock()
     monkeypatch.setattr("subprocess.check_call", check_call)
-    call_command("collectstatic", "--noinput")
-    assert check_call.called
-    assert check_call.call_count == 1
+    call_command("collectstatic", "--noinput", verbosity=2)
+    assert check_call.call_count == 2
+    assert check_call.call_args_list[0][0][0][-1] == "--verbose"
+    assert check_call.call_args_list[0][1]["stdout"] is sys.stdout
+    assert check_call.call_args_list[1][1]["stdout"] is sys.stdout
+    assert "ES modules compressed." in capsys.readouterr().out
 
 
 def test_collectstatic__noesm(monkeypatch):

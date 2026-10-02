@@ -31,10 +31,8 @@ NextGen JavaScript ESM module support for Django.
 Install the package:
 
 ```bash
-pip install django-esm[servestatic]
+pip install django-esm
 ```
-
-`django-esm[whitenoise]` still works as a deprecated alias for `django-esm[servestatic]`.
 
 First, add `django_esm` to your `INSTALLED_APPS` settings:
 

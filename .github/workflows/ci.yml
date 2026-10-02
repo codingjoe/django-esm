@@ -48,33 +48,3 @@ jobs:
         with:
           use_oidc: true
           flags: python-${{ matrix.python-version }}-django-${{ matrix.django-version }}
-  pytest-extras:
-    name: PyTest
-    permissions:
-      contents: read
-      id-token: write
-    strategy:
-      matrix:
-        python-version:
-          - "3.12"
-        extra:
-          - "servestatic"
-          - "whitenoise"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v7
-        with:
-          python-version: ${{ matrix.python-version }}
-      - uses: actions/setup-node@v7
-        with:
-          node-version: "lts/*"
-      - run: |
-          cd tests
-          npm install
-      - run: uv run --no-dev --group=test tests/manage.py collectstatic --noinput
-      - run: uv run --no-dev --group=test --extra=${{ matrix.extra }} pytest
-      - uses: codecov/codecov-action@v7
-        with:
-          use_oidc: true
-          flags: python-${{ matrix.python-version }}-${{ matrix.extra }}

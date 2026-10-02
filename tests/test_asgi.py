@@ -1,10 +1,8 @@
 import asyncio
 
-import pytest
 from asgiref.testing import ApplicationCommunicator
 
-pytest.importorskip("servestatic")
-from tests.testapp.asgi import application  # noqa: E402
+from tests.testapp.asgi import application
 
 
 def _scope(path):
