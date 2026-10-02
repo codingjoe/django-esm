@@ -16,8 +16,9 @@ class _QuietRequestHandler(WSGIRequestHandler):
 
 
 def _get(url):
+    request = urllib.request.Request(url, headers={"Host": "testserver"})
     try:
-        response = urllib.request.urlopen(url, timeout=10)
+        response = urllib.request.urlopen(request, timeout=10)
     except urllib.error.HTTPError as error:
         return error.code, error.headers, error.read()
     with response:

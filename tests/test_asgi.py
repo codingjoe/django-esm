@@ -18,7 +18,7 @@ def _scope(path):
         "raw_path": path.encode(),
         "query_string": b"",
         "root_path": "",
-        "headers": [(b"host", b"localhost")],
+        "headers": [(b"host", b"testserver")],
         "client": ("127.0.0.1", 12345),
         "server": ("127.0.0.1", 80),
     }
