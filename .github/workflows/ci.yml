@@ -15,7 +15,7 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           path: dist/*
-  pytest-python:
+  pytest:
     name: PyTest
     strategy:
       matrix:
@@ -27,6 +27,12 @@ jobs:
           - "3.14"
         django-version:
           - "5.2" # LTS
+          - "6.0"
+        exclude:
+          - python-version: "3.10"
+            django-version: "6.0"
+          - python-version: "3.11"
+            django-version: "6.0"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -39,22 +45,20 @@ jobs:
       - run: |
           cd tests
           npm install
-      - run: uv run tests/manage.py collectstatic --noinput
-      - run: uv run ${{ matrix.extras }} --with django~=${{ matrix.django-version }}.0 pytest
+      - run: uv run --no-dev --group=test tests/manage.py collectstatic --noinput
+      - run: uv run --no-dev --group=test --with Django~=${{ matrix.django-version }}.0 pytest
       - uses: codecov/codecov-action@v7
         with:
-          flags: py${{ matrix.python-version }}
           token: ${{ secrets.CODECOV_TOKEN }}
-  pytest-django:
+          flags: python-${{ matrix.python-version }}-django-${{ matrix.django-version }}
+  pytest-extras:
     name: PyTest
     strategy:
       matrix:
         python-version:
           - "3.12"
-        django-version:
-          # oldest LTS gets tested on all Python versions
-          - "5.2"
-          - "6.0"
+        extra:
+          - "whitenoise"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -67,31 +71,9 @@ jobs:
       - run: |
           cd tests
           npm install
-      - run: uv run tests/manage.py collectstatic --noinput
-      - run: uv run ${{ matrix.extras }} --with django~=${{ matrix.django-version }}.0 pytest
+      - run: uv run --no-dev --group=test tests/manage.py collectstatic --noinput
+      - run: uv run --no-dev --group=test --extra=${{ matrix.extra }} pytest
       - uses: codecov/codecov-action@v7
         with:
-          flags: dj${{ matrix.django-version }}
           token: ${{ secrets.CODECOV_TOKEN }}
-  pytest-extras:
-    name: PyTest
-    strategy:
-      matrix:
-        extras:
-          - "--extra whitenoise"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version: "lts/*"
-      - run: |
-          cd tests
-          npm install
-      - run: uv run tests/manage.py collectstatic --noinput
-      - run: uv run ${{ matrix.extras }} pytest
-      - uses: codecov/codecov-action@v7
-        with:
-          flags: dj${{ matrix.extras }}
-          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: python-${{ matrix.python-version }}-${{ matrix.extra }}
