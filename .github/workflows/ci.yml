@@ -17,6 +17,9 @@ jobs:
           path: dist/*
   pytest:
     name: PyTest
+    permissions:
+      contents: read
+      id-token: write
     strategy:
       matrix:
         python-version:
@@ -49,10 +52,13 @@ jobs:
       - run: uv run --no-dev --group=test --with Django~=${{ matrix.django-version }}.0 pytest
       - uses: codecov/codecov-action@v7
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
           flags: python-${{ matrix.python-version }}-django-${{ matrix.django-version }}
   pytest-extras:
     name: PyTest
+    permissions:
+      contents: read
+      id-token: write
     strategy:
       matrix:
         python-version:
@@ -75,5 +81,5 @@ jobs:
       - run: uv run --no-dev --group=test --extra=${{ matrix.extra }} pytest
       - uses: codecov/codecov-action@v7
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
           flags: python-${{ matrix.python-version }}-${{ matrix.extra }}
