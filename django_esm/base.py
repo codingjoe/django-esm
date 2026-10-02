@@ -4,11 +4,6 @@ from django_esm.conf import get_settings
 
 
 class ServeESM:
-    """Serve the ES modules built by the ``esm`` command under ``/esm/``.
-
-    Delegate every other request to the wrapped application.
-    """
-
     def immutable_file_test(self, path, url):
         return True
 
