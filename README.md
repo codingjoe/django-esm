@@ -100,11 +100,9 @@ That's it!
 
 ### Development
 
-Install the JavaScript dependencies once, then rebuild `STATIC_DIR` on every
-change:
+Rebuild `STATIC_DIR` on every change:
 
 ```bash
-npm install
 python manage.py esm --watch
 ```
 
