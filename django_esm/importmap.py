@@ -21,7 +21,7 @@ def _resolve_importmap_urls(raw_importmap):
         if filename.startswith(("http://", "https://")):
             static_url = filename
         else:
-            static_url = str(pathlib.Path("/") / static_prefix / filename)
+            static_url = str(pathlib.PurePosixPath("/") / static_prefix / filename)
         full_importmap["imports"][module_name] = static_url
         full_importmap["integrity"][static_url] = raw_importmap["integrity"][filename]
     return full_importmap
