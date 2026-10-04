@@ -3,9 +3,31 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from django_esm import importmap
 from django_esm.conf import get_settings
 
 TEST_DIR = Path(__file__).parent
+
+
+@pytest.fixture
+def importmap_file(settings, tmp_path, monkeypatch):
+    """Write an import map to a temporary static directory and reset the cache."""
+    (tmp_path / "importmap.json").write_text(
+        json.dumps(
+            {
+                "imports": {
+                    "remote": "https://cdn.example.com/module.js",
+                    "local": "./local.js",
+                },
+                "integrity": {
+                    "https://cdn.example.com/module.js": "sha256-remote",
+                    "./local.js": "sha256-local",
+                },
+            }
+        )
+    )
+    settings.ESM = {"STATIC_DIR": tmp_path}
+    monkeypatch.setattr(importmap, "resolved_importmap", {})
 
 
 @pytest.fixture(scope="session")
