@@ -1,24 +1,37 @@
+import warnings
+
 from django.forms import Script
 
-__all__ = ["ImportESModule"]
+from .importmap import resolve_module
+
+__all__ = ["ESM", "ImportESModule"]
 
 
-class ImportESModule(Script):
+class ESM(Script):
     """
-    Import ES module inline via an importmap.
+    Import an ES module from the import map as a script tag with its integrity hash.
 
     Usage:
         class MyForm(forms.Form):
             class Media:
-                js = [ImportESModule("@sentry/browser")]
+                js = [ESM("@sentry/browser")]
     """
 
     # https://code.djangoproject.com/ticket/36353
-    element_template = "<script{attributes}>import '{path}'</script>"
+    element_template = '<script type="module" src="{path}"{attributes}></script>'
 
     def __init__(self, src, **attributes):
-        super().__init__(src, **attributes | {"type": "module"})
+        source_url, integrity = resolve_module(src)
+        super().__init__(source_url, **attributes | {"integrity": integrity})
 
-    @property
-    def path(self):
-        return self._path
+
+class ImportESModule(ESM):
+    """Provide a deprecated alias for ESM."""
+
+    def __init__(self, *args, **kwargs):
+        warnings.warn(
+            "ImportESModule is deprecated, use django_esm.forms.ESM instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        super().__init__(*args, **kwargs)

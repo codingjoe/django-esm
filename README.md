@@ -117,27 +117,44 @@ You can now import JavaScript modules in your Django templates:
 {% endblock %}
 ```
 
+### Script tags
+
+Use the `esm` tag to load a module from the import map as a script tag, with its
+resolved URL and integrity hash:
+
+```html
+{% load esm %}
+{% esm "htmx.org" %}
+```
+
+```html
+<script type="module" src="/esm/node_modules/htmx.org/dist/htmx.min-<hash>.js" integrity="sha256-… sha384-… sha512-…"></script>
+```
+
+The name must be a key of the import map, that is, a package name or a
+[private module](#private-modules).
+
 ### Form.media
 
-To use your importmap in Django forms, you can use the `Form.media` attribute:
+To use your import map in Django forms, you can use the `Form.media` attribute:
 
 ```python
 # forms.py
 from django import forms
-from django_esm.forms import ImportESModule
+from django_esm.forms import ESM
 
 
 class MyForm(forms.Form):
     name = forms.CharField()
 
     class Media:
-        js = [ImportESModule("@sentry/browser")]
+        js = [ESM("@sentry/browser")]
 ```
 
-Now `{{ form.media.js }}` will render to like this:
+Now `{{ form.media.js }}` will render like this:
 
 ```html
-<script type="module">import '@sentry/browser'</script>
+<script type="module" src="/esm/node_modules/@sentry/browser/build/bundle-<hash>.js" integrity="sha256-… sha384-… sha512-…"></script>
 ```
 
 ### Private modules
