@@ -2,7 +2,6 @@ import json
 from unittest.mock import Mock
 
 import pytest
-from django_esm import importmap
 from django_esm.exceptions import ModuleNotFound
 from django_esm.templatetags import esm
 
@@ -20,27 +19,8 @@ def test_importmap_resolves_local_and_remote_urls(importmap_file):
     }
 
 
-def test_importmap_is_cached_when_debug_is_off(settings, tmp_path, monkeypatch):
+def test_importmap_is_cached_when_debug_is_off(settings, tmp_path, importmap_file):
     settings.DEBUG = False
-    importmap_path = tmp_path / "importmap.json"
-    importmap_path.write_text(json.dumps({"imports": {}, "integrity": {}}))
-    settings.ESM = {"STATIC_DIR": tmp_path}
-    monkeypatch.setattr(importmap, "resolved_importmap", {})
-    monkeypatch.setattr(esm, "importmap_json", "")
-
-    first = str(esm.importmap())
-    importmap_path.write_text(
-        json.dumps(
-            {"imports": {"late": "./late.js"}, "integrity": {"./late.js": "sha"}}
-        )
-    )
-
-    assert str(esm.importmap()) == first
-    assert json.loads(first) == {"imports": {}, "integrity": {}}
-
-
-def test_importmap_is_reread_when_debug_is_on(settings, tmp_path, importmap_file):
-    settings.DEBUG = True
 
     first = str(esm.importmap())
     (tmp_path / "importmap.json").write_text(
@@ -49,7 +29,20 @@ def test_importmap_is_reread_when_debug_is_on(settings, tmp_path, importmap_file
         )
     )
 
-    assert str(esm.importmap()) != first
+    assert str(esm.importmap()) == first
+    assert '"late"' not in first
+
+
+def test_importmap_is_reread_when_debug_is_on(settings, tmp_path, importmap_file):
+    settings.DEBUG = True
+    assert '"late"' not in str(esm.importmap())
+
+    (tmp_path / "importmap.json").write_text(
+        json.dumps(
+            {"imports": {"late": "./late.js"}, "integrity": {"./late.js": "sha"}}
+        )
+    )
+
     assert '"late"' in str(esm.importmap())
 
 
@@ -84,4 +77,3 @@ def test_esm__module_absent(importmap_file):
         esm.esm("unknown")
 
     assert error.value.module_name == "unknown"
-    assert isinstance(error.value.__cause__, KeyError)

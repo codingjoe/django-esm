@@ -1,6 +1,5 @@
 import json
 import pathlib
-import re
 
 from django.conf import settings
 
@@ -19,7 +18,7 @@ def _resolve_importmap_urls(raw_importmap):
     }
     static_prefix = conf.get_settings().STATIC_PREFIX
     for module_name, filename in raw_importmap["imports"].items():
-        if re.match("^https?://", filename):
+        if filename.startswith(("http://", "https://")):
             static_url = filename
         else:
             static_url = str(pathlib.Path("/") / static_prefix / filename)
