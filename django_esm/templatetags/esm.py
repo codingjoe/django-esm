@@ -9,17 +9,20 @@ from ..importmap import get_importmap
 
 register = template.Library()
 
+importmap_json = ""
+
 
 @register.simple_tag
 def importmap():
     """Render the import map for an importmap script tag."""
-    return mark_safe(  # noqa: S308
-        json.dumps(
+    global importmap_json
+    if not importmap_json or settings.DEBUG:
+        importmap_json = json.dumps(
             get_importmap(),
             indent=2 if settings.DEBUG else None,
             separators=None if settings.DEBUG else (",", ":"),
         )
-    )
+    return mark_safe(importmap_json)  # noqa: S308
 
 
 @register.simple_tag

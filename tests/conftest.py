@@ -5,13 +5,14 @@ from pathlib import Path
 import pytest
 from django_esm import importmap
 from django_esm.conf import get_settings
+from django_esm.templatetags import esm
 
 TEST_DIR = Path(__file__).parent
 
 
 @pytest.fixture
 def importmap_file(settings, tmp_path, monkeypatch):
-    """Write an import map to a temporary static directory and reset the cache."""
+    """Write an import map to a temporary static directory and reset the caches."""
     (tmp_path / "importmap.json").write_text(
         json.dumps(
             {
@@ -28,6 +29,7 @@ def importmap_file(settings, tmp_path, monkeypatch):
     )
     settings.ESM = {"STATIC_DIR": tmp_path}
     monkeypatch.setattr(importmap, "resolved_importmap", {})
+    monkeypatch.setattr(esm, "importmap_json", "")
 
 
 @pytest.fixture(scope="session")

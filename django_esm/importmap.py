@@ -17,13 +17,12 @@ def _resolve_importmap_urls(raw_importmap):
         "imports": {},
         "integrity": {},
     }
+    static_prefix = conf.get_settings().STATIC_PREFIX
     for module_name, filename in raw_importmap["imports"].items():
         if re.match("^https?://", filename):
             static_url = filename
         else:
-            static_url = str(
-                pathlib.Path("/") / conf.get_settings().STATIC_PREFIX / filename
-            )
+            static_url = str(pathlib.Path("/") / static_prefix / filename)
         full_importmap["imports"][module_name] = static_url
         full_importmap["integrity"][static_url] = raw_importmap["integrity"][filename]
     return full_importmap
