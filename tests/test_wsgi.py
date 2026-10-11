@@ -15,9 +15,11 @@ class _QuietRequestHandler(WSGIRequestHandler):
 
 
 def _get(url):
-    request = urllib.request.Request(url, headers={"Host": "testserver"})
+    request = urllib.request.Request(  # noqa: S310
+        url, headers={"Host": "testserver"}
+    )
     try:
-        response = urllib.request.urlopen(request, timeout=10)
+        response = urllib.request.urlopen(request, timeout=10)  # noqa: S310
     except urllib.error.HTTPError as error:
         return error.code, error.headers, error.read()
     with response:
