@@ -24,7 +24,7 @@ class Command(collectstatic.Command):
 
     def handle(self, **options):
         if not options["no_esm"]:
-            subprocess.check_call(  # noqa: S603, S607
+            subprocess.check_call(  # noqa: S603
                 [
                     "npx",
                     "--yes",

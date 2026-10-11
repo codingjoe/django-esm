@@ -2,7 +2,8 @@ __all__ = ["ModuleNotFound"]
 
 
 class ModuleNotFound(LookupError):
-    """Raise when a module is absent from the import map.
+    """
+    Raise when a module is absent from the import map.
 
     Attributes:
         module_name: Name of the requested module.

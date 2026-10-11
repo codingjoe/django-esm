@@ -1,6 +1,6 @@
 """Lightweight JavaScript ESM module loader for Django."""
 
-from . import _version  # noqa
+from . import _version
 
 __version__ = _version.__version__
 VERSION = _version.version_tuple
