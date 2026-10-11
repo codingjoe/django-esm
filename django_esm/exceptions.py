@@ -1,7 +1,7 @@
-__all__ = ["ModuleNotFound"]
+__all__ = ["ModuleMissingError", "ModuleNotFound"]
 
 
-class ModuleNotFound(LookupError):
+class ModuleMissingError(LookupError):
     """
     Raise when a module is absent from the import map.
 
@@ -15,3 +15,7 @@ class ModuleNotFound(LookupError):
             f"The import map has no entry for module {module_name!r}. "
             "Check that your package.json exports it and run the esm command."
         )
+
+
+# Kept for backwards compatibility.
+ModuleNotFound = ModuleMissingError

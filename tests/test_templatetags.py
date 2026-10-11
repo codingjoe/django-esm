@@ -2,7 +2,7 @@ import json
 from unittest.mock import Mock
 
 import pytest
-from django_esm.exceptions import ModuleNotFound
+from django_esm.exceptions import ModuleMissingError
 from django_esm.templatetags import esm
 
 
@@ -73,7 +73,7 @@ def test_esm__remote_url(importmap_file):
 
 
 def test_esm__module_absent(importmap_file):
-    with pytest.raises(ModuleNotFound, match="unknown") as error:
+    with pytest.raises(ModuleMissingError, match="unknown") as error:
         esm.esm("unknown")
 
     assert error.value.module_name == "unknown"

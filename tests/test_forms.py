@@ -1,7 +1,7 @@
 import pytest
 from django.forms import Form
 from django_esm import forms
-from django_esm.exceptions import ModuleNotFound
+from django_esm.exceptions import ModuleMissingError
 
 
 class TestESM:
@@ -26,7 +26,7 @@ class TestESM:
         assert forms.ESM("local") == forms.ESM("local")
 
     def test_module_absent(self, importmap_file):
-        with pytest.raises(ModuleNotFound, match="unknown"):
+        with pytest.raises(ModuleMissingError, match="unknown"):
             forms.ESM("unknown")
 
 
