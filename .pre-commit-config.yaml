@@ -44,6 +44,14 @@ repos:
     rev: v0.21.0
     hooks:
       - id: yamlfmt
+  - repo: https://github.com/oxc-project/mirrors-oxlint
+    rev: v1.86.0
+    hooks:
+      - id: oxlint
+  - repo: https://github.com/oxc-project/mirrors-oxfmt
+    rev: v0.71.0
+    hooks:
+      - id: oxfmt
 # See https://pre-commit.ci/
 ci:
   autoupdate_schedule: weekly
