@@ -39,7 +39,8 @@ def get_importmap():
 
 
 def resolve_module(module_name):
-    """Return the source URL and integrity hash of a module in the import map.
+    """
+    Return the source URL and integrity hash of a module in the import map.
 
     Raises:
         ModuleNotFound: If the import map has no entry for the module.
