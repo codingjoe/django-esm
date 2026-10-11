@@ -1,102 +1,47 @@
 [build-system]
-requires = ["flit_core>=3.12.0", "flit_scm", "wheel"]
 build-backend = "flit_scm:buildapi"
+requires = [ "flit-core>=3.12", "flit-scm", "wheel" ]
 
 [project]
 name = "django-esm"
-authors = [
-  { name = "Johannes Maron", email = "johannes@maron.family" },
-]
 readme = "README.md"
+keywords = [ "Django", "ESM", "importmap", "JavaScript", "module" ]
 license = { file = "LICENSE" }
-keywords = ["ESM", "JavaScript", "importmap", "Django", "module"]
-dynamic = ["version", "description"]
+requires-python = ">=3.14"
 classifiers = [
   "Development Status :: 5 - Production/Stable",
-  "Programming Language :: Python",
   "Environment :: Web Environment",
-  "Intended Audience :: Developers",
-  "License :: OSI Approved :: BSD License",
-  "Operating System :: OS Independent",
-  "Programming Language :: Python",
-  "Topic :: Software Development",
-  "Programming Language :: JavaScript",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.14",
-  "Programming Language :: Python :: 3.15",
   "Framework :: Django",
   "Framework :: Django :: 5.2",
   "Framework :: Django :: 6.0",
   "Framework :: Django :: 6.1",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: BSD License",
+  "Operating System :: OS Independent",
+  "Programming Language :: JavaScript",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
+  "Topic :: Software Development",
 ]
-requires-python = ">=3.14"
+dynamic = [ "description", "version" ]
 dependencies = [
   "django>=5.2.13",
   "servestatic>=4.3.4",
 ]
-
+[[project.authors]]
+name = "Johannes Maron"
+email = "johannes@maron.family"
 [project.optional-dependencies]
 # deprecated no-op alias; servestatic is a hard dependency
 whitenoise = []
-
 [project.urls]
-Project-URL = "https://github.com/codingjoe/django-esm"
 Changelog = "https://github.com/codingjoe/django-esm/releases"
-Source = "https://github.com/codingjoe/django-esm"
 Documentation = "https://github.com/codingjoe/django-esm#django-esm"
 Issue-Tracker = "https://github.com/codingjoe/django-esm/issues"
-
-[tool.flit.module]
-name = "django_esm"
-
-[tool.setuptools_scm]
-write_to = "django_esm/_version.py"
-
-[tool.pytest.ini_options]
-minversion = "6.0"
-addopts = "--cov --tb=short -rxs"
-testpaths = ["tests"]
-DJANGO_SETTINGS_MODULE = "tests.testapp.settings"
-
-[tool.coverage.run]
-source = ["django_esm"]
-
-[tool.coverage.report]
-show_missing = true
-omit = ["django_esm/_version.py", "tests/*"]
-
-[tool.ruff]
-src = ["crontask", "tests"]
-
-[tool.ruff.lint]
-select = [
-    "E", # pycodestyle errors
-    "W", # pycodestyle warnings
-    "F", # pyflakes
-    "I", # isort
-    "S", # flake8-bandit
-    "D", # pydocstyle
-    "UP", # pyupgrade
-    "B", # flake8-bugbear
-    "C", # flake8-comprehensions
-]
-
-ignore = ["B904", "D1", "E501", "S101"]
-
-[tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = [
-  "S",
-]
-
-[tool.ruff.lint.isort]
-combine-as-imports = true
-split-on-trailing-comma = true
-section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
-force-wrap-aliases = true
-
-[tool.ruff.lint.pydocstyle]
-convention = "pep257"
+Project-URL = "https://github.com/codingjoe/django-esm"
+Source = "https://github.com/codingjoe/django-esm"
 
 [dependency-groups]
 dev = [
@@ -107,3 +52,48 @@ test = [
   "pytest-cov",
   "pytest-django",
 ]
+
+[tool.setuptools_scm]
+write_to = "django_esm/_version.py"
+
+[tool.flit]
+[tool.flit.module]
+name = "django_esm"
+
+[tool.ruff]
+src = [ "crontask", "tests" ]
+[tool.ruff.lint]
+select = [
+  "B",  # flake8-bugbear
+  "C",  # flake8-comprehensions
+  "D",  # pydocstyle
+  "E",  # pycodestyle errors
+  "F",  # pyflakes
+  "I",  # isort
+  "S",  # flake8-bandit
+  "UP", # pyupgrade
+  "W",  # pycodestyle warnings
+]
+ignore = [ "B904", "D1", "E501", "S101" ]
+per-file-ignores."tests/**/*.py" = [
+  "S",
+]
+isort.combine-as-imports = true
+isort.force-wrap-aliases = true
+isort.section-order = [ "future", "standard-library", "third-party", "first-party", "local-folder" ]
+isort.split-on-trailing-comma = true
+pydocstyle.convention = "pep257"
+
+[tool.pytest]
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = [ "tests" ]
+addopts = "--cov --tb=short -rxs"
+DJANGO_SETTINGS_MODULE = "tests.testapp.settings"
+
+[tool.coverage]
+[tool.coverage.run]
+source = [ "django_esm" ]
+[tool.coverage.report]
+omit = [ "django_esm/_version.py", "tests/*" ]
+show_missing = true
